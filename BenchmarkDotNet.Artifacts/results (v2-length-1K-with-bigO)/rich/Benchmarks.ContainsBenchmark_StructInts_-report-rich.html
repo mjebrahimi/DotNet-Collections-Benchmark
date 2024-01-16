@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Title</title>
+<style type="text/css">
+    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; }
+    h1, h2 { border-bottom: solid 1px #D8DEE4;}
+    h1, h2, h3 { padding-bottom: 0.3em; }
+    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
+    td, th { padding: 6px 13px; border: 1px solid #CCC; text-align: right; white-space: nowrap; }
+    tr td:first-child { text-align: left; }
+    tr { background-color: #FFF !important; border-top: 1px solid #CCC; }
+    tr:nth-child(even):not(.divider) { background: #F8F8F8 !important; }
+    tr.divider { border: 0; font-size: 10px; }
+    tr.divider td { padding: 0; border: 0; }
+    pre { background: #EFEFEF; padding: 0 1em; }
+    thead th { background-color: #EFEFEF; }
+    tbody tr:not(.divider):hover { background-color: #EFEFEF !important; border: 2px solid #ADADAD; }
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.4/css/colReorder.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style type="text/css">
+    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; }
+    thead th:hover { background-color: #E0E0E0; }
+</style>
+</head>
+<body>
+<h1>Title</h1>
+<pre>
+<code>
+BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]   : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3
+</code>
+</pre>
+<h2>Contains benchmark for 'StructInts' type</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Categories</th><th>DataType</th><th>Length</th><th>Existed</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Allocated</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SortedSet</strong></td>
+<td><strong>O(log(N))</strong></td>
+<td><strong>StructInts</strong></td>
+<td><strong>1000</strong></td>
+<td style="background-color: #CCFFFF;"><strong>False</strong></td>
+<td style="background-color: #99FF99;"><strong>12.96 ns</strong></td>
+<td><strong>7.283 ns</strong></td>
+<td><strong>0.399 ns</strong></td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">18.93 ns</td>
+<td>2.100 ns</td>
+<td>0.115 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>List (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">19.17 ns</td>
+<td>2.258 ns</td>
+<td>0.124 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableArray (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">19.19 ns</td>
+<td>1.790 ns</td>
+<td>0.098 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>FrozenSet</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">20.32 ns</td>
+<td>5.697 ns</td>
+<td>0.312 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>FrozenDictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">20.49 ns</td>
+<td>3.656 ns</td>
+<td>0.200 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>HashSet</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">22.29 ns</td>
+<td>7.726 ns</td>
+<td>0.423 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>ReadOnlyDictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">22.84 ns</td>
+<td>0.328 ns</td>
+<td>0.018 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>SortedList</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">23.86 ns</td>
+<td>6.965 ns</td>
+<td>0.382 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>Dictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">24.19 ns</td>
+<td>2.166 ns</td>
+<td>0.119 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>SortedDictionary</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">24.52 ns</td>
+<td>6.728 ns</td>
+<td>0.369 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>ImmutableDictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">25.33 ns</td>
+<td>3.162 ns</td>
+<td>0.173 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>ImmutableHashSet</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">27.69 ns</td>
+<td>8.744 ns</td>
+<td>0.479 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>ImmutableList (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">31.48 ns</td>
+<td>7.400 ns</td>
+<td>0.406 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedSet</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">37.11 ns</td>
+<td>5.834 ns</td>
+<td>0.320 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedDictionary</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">37.15 ns</td>
+<td>5.070 ns</td>
+<td>0.278 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FFBD99;">12,463.03 ns</td>
+<td>11,691.582 ns</td>
+<td>640.855 ns</td>
+<td style="background-color: #FF9999;">64000 B</td>
+</tr>
+<tr>
+<td>List</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FFA699;">13,190.33 ns</td>
+<td>9,086.595 ns</td>
+<td>498.067 ns</td>
+<td style="background-color: #FF9999;">64000 B</td>
+</tr>
+<tr>
+<td>ImmutableArray</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FFA599;">13,202.27 ns</td>
+<td>20,087.818 ns</td>
+<td>1,101.081 ns</td>
+<td style="background-color: #FF9999;">64000 B</td>
+</tr>
+<tr>
+<td>ReadOnlyCollection</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FF9999;">13,302.69 ns</td>
+<td>15,827.541 ns</td>
+<td>867.561 ns</td>
+<td style="background-color: #FF9999;">64000 B</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Categories</th><th>DataType</th><th>Length</th><th>Existed</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Allocated</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SortedSet</strong></td>
+<td><strong>O(log(N))</strong></td>
+<td><strong>StructInts</strong></td>
+<td><strong>1000</strong></td>
+<td style="background-color: #FFCCFF;"><strong>True</strong></td>
+<td style="background-color: #99FF99;"><strong>17.81 ns</strong></td>
+<td><strong>3.540 ns</strong></td>
+<td><strong>0.194 ns</strong></td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">20.24 ns</td>
+<td>4.076 ns</td>
+<td>0.223 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableArray (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">20.27 ns</td>
+<td>0.536 ns</td>
+<td>0.029 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>List (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">20.60 ns</td>
+<td>4.917 ns</td>
+<td>0.270 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedDictionary</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">24.90 ns</td>
+<td>1.297 ns</td>
+<td>0.071 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>SortedList</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">25.58 ns</td>
+<td>3.680 ns</td>
+<td>0.202 ns</td>
+<td style="background-color: #99FF99;">32 B</td>
+</tr>
+<tr>
+<td>ImmutableList (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">27.15 ns</td>
+<td>2.459 ns</td>
+<td>0.135 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedDictionary</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">29.41 ns</td>
+<td>1.524 ns</td>
+<td>0.084 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedSet</td>
+<td>O(log(N))</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">29.56 ns</td>
+<td>6.592 ns</td>
+<td>0.361 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>FrozenSet</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">35.92 ns</td>
+<td>24.385 ns</td>
+<td>1.337 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>FrozenDictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">36.45 ns</td>
+<td>21.510 ns</td>
+<td>1.179 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>HashSet</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">39.24 ns</td>
+<td>29.821 ns</td>
+<td>1.635 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>ImmutableDictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">40.29 ns</td>
+<td>22.601 ns</td>
+<td>1.239 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>ReadOnlyDictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">40.91 ns</td>
+<td>13.843 ns</td>
+<td>0.759 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>ImmutableHashSet</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">41.37 ns</td>
+<td>25.692 ns</td>
+<td>1.408 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>Dictionary</td>
+<td>O(1)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">41.99 ns</td>
+<td>19.671 ns</td>
+<td>1.078 ns</td>
+<td style="background-color: #9AFF99;">96 B</td>
+</tr>
+<tr>
+<td>Array</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FFB099;">6,322.55 ns</td>
+<td>5,531.420 ns</td>
+<td>303.196 ns</td>
+<td style="background-color: #FF9999;">30901 B</td>
+</tr>
+<tr>
+<td>ImmutableArray</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FFAC99;">6,373.33 ns</td>
+<td>5,837.792 ns</td>
+<td>319.989 ns</td>
+<td style="background-color: #FF9999;">30901 B</td>
+</tr>
+<tr>
+<td>List</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FFAC99;">6,377.23 ns</td>
+<td>4,884.856 ns</td>
+<td>267.755 ns</td>
+<td style="background-color: #FF9999;">30901 B</td>
+</tr>
+<tr>
+<td>ReadOnlyCollection</td>
+<td>O(N)</td>
+<td>StructInts</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FF9999;">6,487.09 ns</td>
+<td>7,103.222 ns</td>
+<td>389.352 ns</td>
+<td style="background-color: #FF9999;">30901 B</td>
+</tr>
+</tbody>
+</table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/colreorder/1.5.4/js/dataTables.colReorder.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+</body>
+<script>
+    $(document).ready( function () {
+        DataTable.ext.type.order['custom-orderer-pre'] = function (d) {
+            d = d.replace(/(<([^>]+)>)/gi, ""); //remove html tags
+            if (!d.match(/^\d/)) //if not started with number
+                return d;
+            var regex = /[\d,]+(?:\.\d+)?/;
+            var number = d.match(regex)[0].replace(/,/g, ""); //extract number
+            return parseFloat(number); //Number
+        };
+        $('table').DataTable({
+            info: false,
+            paging: false,
+            colReorder: true,
+            order: [], //remove default order
+            columnDefs: [
+                {
+                    type: 'custom-orderer',
+                    targets: '_all'
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: ['colvis']
+        });
+    });
+</script>
+</html>

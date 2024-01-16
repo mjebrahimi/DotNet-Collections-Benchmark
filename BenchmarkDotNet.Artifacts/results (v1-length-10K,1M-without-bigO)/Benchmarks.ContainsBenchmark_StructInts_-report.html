@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmarks.ContainsBenchmark_StructInts_-20231228-033424</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.100
+  [Host]   : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                            </th><th>DataType</th><th>Length</th><th>Existed</th><th>Mean      </th><th>Error     </th><th>StdDev  </th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>FrozenSet</td><td>StructInts</td><td>10000</td><td>False</td><td>15.49 ns</td><td>7.297 ns</td><td>0.400 ns</td><td>32 B</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>15.55 ns</td><td>4.088 ns</td><td>0.224 ns</td><td>32 B</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>10000</td><td>False</td><td>15.69 ns</td><td>1.636 ns</td><td>0.090 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>17.13 ns</td><td>4.493 ns</td><td>0.246 ns</td><td>32 B</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>10000</td><td>False</td><td>17.13 ns</td><td>4.154 ns</td><td>0.228 ns</td><td>32 B</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>17.13 ns</td><td>5.707 ns</td><td>0.313 ns</td><td>32 B</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>21.34 ns</td><td>1.019 ns</td><td>0.056 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>22.79 ns</td><td>0.925 ns</td><td>0.051 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>22.80 ns</td><td>1.665 ns</td><td>0.091 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>10000</td><td>False</td><td>23.22 ns</td><td>1.748 ns</td><td>0.096 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>10000</td><td>False</td><td>28.03 ns</td><td>8.310 ns</td><td>0.456 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>29.06 ns</td><td>7.314 ns</td><td>0.401 ns</td><td>32 B</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>29.36 ns</td><td>0.665 ns</td><td>0.036 ns</td><td>32 B</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>40.30 ns</td><td>4.550 ns</td><td>0.249 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>44.04 ns</td><td>1.930 ns</td><td>0.106 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>10000</td><td>False</td><td>45.35 ns</td><td>1.418 ns</td><td>0.078 ns</td><td>-</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>10000</td><td>False</td><td>92,088.59 ns</td><td>12,583.946 ns</td><td>689.769 ns</td><td>640000 B</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>10000</td><td>False</td><td>94,097.20 ns</td><td>16,533.553 ns</td><td>906.260 ns</td><td>640000 B</td>
+</tr><tr><td>List</td><td>StructInts</td><td>10000</td><td>False</td><td>94,204.54 ns</td><td>33,545.683 ns</td><td>1,838.752 ns</td><td>640000 B</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>10000</td><td>False</td><td>96,002.80 ns</td><td>17,546.888 ns</td><td>961.804 ns</td><td>640000 B</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>10000</td><td>False</td><td>123,252.68 ns</td><td>16,623.882 ns</td><td>911.211 ns</td><td>640000 B</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>10000</td><td>False</td><td>173,945.00 ns</td><td>32,394.414 ns</td><td>1,775.647 ns</td><td>640000 B</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>10000</td><td>True</td><td>21.77 ns</td><td>2.537 ns</td><td>0.139 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>24.78 ns</td><td>0.915 ns</td><td>0.050 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>24.98 ns</td><td>7.345 ns</td><td>0.403 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>25.00 ns</td><td>2.793 ns</td><td>0.153 ns</td><td>-</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>26.00 ns</td><td>1.993 ns</td><td>0.109 ns</td><td>32 B</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>10000</td><td>True</td><td>27.76 ns</td><td>3.181 ns</td><td>0.174 ns</td><td>32 B</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>10000</td><td>True</td><td>28.68 ns</td><td>13.667 ns</td><td>0.749 ns</td><td>96 B</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>29.38 ns</td><td>13.167 ns</td><td>0.722 ns</td><td>96 B</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>29.52 ns</td><td>10.983 ns</td><td>0.602 ns</td><td>96 B</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>29.70 ns</td><td>11.793 ns</td><td>0.646 ns</td><td>96 B</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>10000</td><td>True</td><td>29.93 ns</td><td>10.121 ns</td><td>0.555 ns</td><td>96 B</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>34.76 ns</td><td>1.277 ns</td><td>0.070 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>35.49 ns</td><td>5.207 ns</td><td>0.285 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>10000</td><td>True</td><td>36.04 ns</td><td>3.233 ns</td><td>0.177 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>10000</td><td>True</td><td>37.40 ns</td><td>8.905 ns</td><td>0.488 ns</td><td>96 B</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>38.70 ns</td><td>16.038 ns</td><td>0.879 ns</td><td>96 B</td>
+</tr><tr><td>List</td><td>StructInts</td><td>10000</td><td>True</td><td>46,844.04 ns</td><td>39,433.205 ns</td><td>2,161.467 ns</td><td>300576 B</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>10000</td><td>True</td><td>46,847.21 ns</td><td>34,586.110 ns</td><td>1,895.781 ns</td><td>300576 B</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>10000</td><td>True</td><td>48,968.06 ns</td><td>40,634.333 ns</td><td>2,227.305 ns</td><td>300576 B</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>10000</td><td>True</td><td>49,333.11 ns</td><td>31,901.107 ns</td><td>1,748.607 ns</td><td>300576 B</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>10000</td><td>True</td><td>60,574.24 ns</td><td>22,463.542 ns</td><td>1,231.303 ns</td><td>300576 B</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>10000</td><td>True</td><td>72,392.88 ns</td><td>46,356.638 ns</td><td>2,540.964 ns</td><td>274101 B</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>15.83 ns</td><td>1.114 ns</td><td>0.061 ns</td><td>32 B</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>16.02 ns</td><td>0.725 ns</td><td>0.040 ns</td><td>32 B</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>17.04 ns</td><td>1.630 ns</td><td>0.089 ns</td><td>32 B</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>17.07 ns</td><td>3.388 ns</td><td>0.186 ns</td><td>32 B</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>17.14 ns</td><td>2.704 ns</td><td>0.148 ns</td><td>32 B</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>28.42 ns</td><td>0.951 ns</td><td>0.052 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>30.63 ns</td><td>1.501 ns</td><td>0.082 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>30.69 ns</td><td>1.329 ns</td><td>0.073 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>30.86 ns</td><td>2.709 ns</td><td>0.148 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>1000000</td><td>False</td><td>32.81 ns</td><td>1.392 ns</td><td>0.076 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>55.34 ns</td><td>4.406 ns</td><td>0.241 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>56.11 ns</td><td>0.356 ns</td><td>0.020 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>56.48 ns</td><td>2.026 ns</td><td>0.111 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>61.02 ns</td><td>1.297 ns</td><td>0.071 ns</td><td>-</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>63.09 ns</td><td>0.976 ns</td><td>0.054 ns</td><td>32 B</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>66.84 ns</td><td>2.886 ns</td><td>0.158 ns</td><td>-</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>1000000</td><td>False</td><td>11,451,568.06 ns</td><td>2,555,052.081 ns</td><td>140,051.026 ns</td><td>64000015 B</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>1000000</td><td>False</td><td>11,484,548.61 ns</td><td>2,918,092.550 ns</td><td>159,950.499 ns</td><td>64000015 B</td>
+</tr><tr><td>List</td><td>StructInts</td><td>1000000</td><td>False</td><td>11,694,918.75 ns</td><td>1,606,206.417 ns</td><td>88,041.594 ns</td><td>64000015 B</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>1000000</td><td>False</td><td>11,870,701.39 ns</td><td>5,120,833.515 ns</td><td>280,690.164 ns</td><td>64000015 B</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>1000000</td><td>False</td><td>12,247,570.37 ns</td><td>1,835,317.877 ns</td><td>100,599.966 ns</td><td>64000020 B</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>1000000</td><td>False</td><td>30,995,344.44 ns</td><td>306,960.925 ns</td><td>16,825.564 ns</td><td>64000061 B</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>28.31 ns</td><td>3.505 ns</td><td>0.192 ns</td><td>-</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>29.45 ns</td><td>4.770 ns</td><td>0.261 ns</td><td>96 B</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>29.56 ns</td><td>2.251 ns</td><td>0.123 ns</td><td>96 B</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>30.15 ns</td><td>7.197 ns</td><td>0.394 ns</td><td>96 B</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>30.17 ns</td><td>7.777 ns</td><td>0.426 ns</td><td>96 B</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>30.38 ns</td><td>11.398 ns</td><td>0.625 ns</td><td>96 B</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>33.93 ns</td><td>2.028 ns</td><td>0.111 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>1000000</td><td>True</td><td>33.99 ns</td><td>2.052 ns</td><td>0.112 ns</td><td>32 B</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>34.00 ns</td><td>0.729 ns</td><td>0.040 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>34.02 ns</td><td>2.165 ns</td><td>0.119 ns</td><td>-</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>49.71 ns</td><td>0.177 ns</td><td>0.010 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>51.63 ns</td><td>1.200 ns</td><td>0.066 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>57.67 ns</td><td>0.227 ns</td><td>0.012 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>58.14 ns</td><td>0.312 ns</td><td>0.017 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>60.93 ns</td><td>2.346 ns</td><td>0.129 ns</td><td>96 B</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>63.14 ns</td><td>6.177 ns</td><td>0.339 ns</td><td>96 B</td>
+</tr><tr><td>List</td><td>StructInts</td><td>1000000</td><td>True</td><td>4,963,164.20 ns</td><td>122,083.745 ns</td><td>6,691.822 ns</td><td>27782359 B</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>1000000</td><td>True</td><td>5,033,124.31 ns</td><td>1,497,539.415 ns</td><td>82,085.189 ns</td><td>27782360 B</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>1000000</td><td>True</td><td>5,056,685.80 ns</td><td>1,988,945.596 ns</td><td>109,020.820 ns</td><td>27782359 B</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>1000000</td><td>True</td><td>5,171,685.19 ns</td><td>1,104,780.782 ns</td><td>60,556.763 ns</td><td>27782359 B</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>1000000</td><td>True</td><td>5,960,763.19 ns</td><td>520,745.052 ns</td><td>28,543.793 ns</td><td>27782360 B</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>1000000</td><td>True</td><td>12,102,097.22 ns</td><td>1,383,806.017 ns</td><td>75,851.077 ns</td><td>25116021 B</td>
+</tr></tbody></table>
+</body>
+</html>

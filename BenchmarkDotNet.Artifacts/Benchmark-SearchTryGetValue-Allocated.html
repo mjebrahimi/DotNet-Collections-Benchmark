@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmark of Collection Searching (TryGetValue method) in terms of Allocation Size</title>
+<style type="text/css">
+    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; }
+    h1, h2 { border-bottom: solid 1px #D8DEE4;}
+    h1, h2, h3 { padding-bottom: 0.3em; }
+    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
+    td, th { padding: 6px 13px; border: 1px solid #CCC; text-align: right; white-space: nowrap; }
+    tr { background-color: #FFF !important; border-top: 1px solid #CCC; }
+    tr:nth-child(even):not(.divider) { background: #F8F8F8 !important; }
+    tr.divider { border: 0; font-size: 10px; }
+    tr.divider td { padding: 0; border: 0; }
+    pre { background: #EFEFEF; padding: 0 1em; }
+    thead th { background-color: #EFEFEF; }
+    tbody tr:not(.divider):hover { background-color: #EFEFEF !important; border: 2px solid #ADADAD; }
+    .powered-by { text-align: center; margin-bottom: -20px !important; font-weight: bold; }
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.4/css/colReorder.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style type="text/css">
+    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; }
+    thead th:hover { background-color: #E0E0E0; }
+</style>
+</head>
+<body>
+<h1>Benchmark of Collection Searching (TryGetValue method) in terms of Allocation Size</h1>
+<pre>
+<code>
+BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]   : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3
+</code>
+</pre>
+<h2>Comparison: Allocated</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Big O</th><th>Length</th><th>Existed</th><th>Int32</th><th>String</th><th>StructInts</th><th>ClassInts</th><th>RecordStructInts</th><th>RecordClassInts</th><th>StructStrings</th><th>ClassStrings</th><th>RecordStructStrings</th><th>RecordClassStrings</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">List (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">SortedSet</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedSet</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedDictionary</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenDictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Dictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">HashSet</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenSet</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyDictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableHashSet</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableDictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">SortedList</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">SortedDictionary</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyCollection</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">64000 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">128000 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">64000 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">128001 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">List</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">64000 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">128001 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">64000 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">128001 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Big O</th><th>Length</th><th>Existed</th><th>Int32</th><th>String</th><th>StructInts</th><th>ClassInts</th><th>RecordStructInts</th><th>RecordClassInts</th><th>StructStrings</th><th>ClassStrings</th><th>RecordStructStrings</th><th>RecordClassStrings</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">List (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedSet</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">SortedSet</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedDictionary</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList (Sorted + BinarySearch)</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">SortedList</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">SortedDictionary</td>
+<td style="text-align: left;background-color: #FFFF99">O(log(N))</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">32 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #99FF99">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">40 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenDictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Dictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">HashSet</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyDictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenSet</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableHashSet</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableDictionary</td>
+<td style="text-align: left;background-color: #99FF99">O(1)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">96 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #9AFF99">168 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyCollection</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">30901 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">61441 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">List</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">30901 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">61441 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">30901 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">61441 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray</td>
+<td style="text-align: left;background-color: #FF9999">O(N)</td>
+<td style="">1000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">30901 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="background-color: #FF9999">61441 B</td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+<td style="text-align: left;background-color: #99FF99"><strong>-</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="powered-by">Powered by <a href="https://github.com/mjebrahimi/BenchmarkDotNetVisualizer">https://github.com/mjebrahimi/BenchmarkDotNetVisualizer</a></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/colreorder/1.5.4/js/dataTables.colReorder.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+</body>
+<script>
+    $(document).ready( function () {
+        DataTable.ext.type.order['custom-orderer-pre'] = function (d) {
+            d = d.replace(/(<([^>]+)>)/gi, ""); //remove html tags
+            if (!d.match(/^\d/)) //if not started with number
+                return d;
+            var regex = /[\d,]+(?:\.\d+)?/;
+            var number = d.match(regex)[0].replace(/,/g, ""); //extract number
+            return parseFloat(number); //Number
+        };
+        $('table').DataTable({
+            info: false,
+            paging: false,
+            colReorder: true,
+            order: [], //remove default order
+            columnDefs: [
+                {
+                    type: 'custom-orderer',
+                    targets: '_all'
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: ['colvis']
+        });
+    });
+</script>
+</html>

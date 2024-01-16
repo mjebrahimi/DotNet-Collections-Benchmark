@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmarks.InitializeBenchmark_StructInts_-20231228-134713</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.100
+  [Host]   : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method             </th><th>DataType</th><th>Length</th><th>Sorted</th><th>Mean     </th><th>Error     </th><th>StdDev </th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>Array</td><td>StructInts</td><td>10000</td><td>False</td><td>49.54 &mu;s</td><td>6.834 &mu;s</td><td>0.375 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>10000</td><td>False</td><td>49.57 &mu;s</td><td>3.416 &mu;s</td><td>0.187 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>List</td><td>StructInts</td><td>10000</td><td>False</td><td>49.78 &mu;s</td><td>12.161 &mu;s</td><td>0.667 &mu;s</td><td>117.25 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>10000</td><td>False</td><td>52.25 &mu;s</td><td>12.021 &mu;s</td><td>0.659 &mu;s</td><td>117.25 KB</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>10000</td><td>False</td><td>122.48 &mu;s</td><td>75.045 &mu;s</td><td>4.113 &mu;s</td><td>546.92 KB</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>10000</td><td>False</td><td>127.29 &mu;s</td><td>89.692 &mu;s</td><td>4.916 &mu;s</td><td>546.95 KB</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>10000</td><td>False</td><td>372.90 &mu;s</td><td>125.487 &mu;s</td><td>6.878 &mu;s</td><td>549.46 KB</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>399.97 &mu;s</td><td>130.333 &mu;s</td><td>7.144 &mu;s</td><td>588.91 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>404.26 &mu;s</td><td>57.602 &mu;s</td><td>3.157 &mu;s</td><td>588.95 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>478.77 &mu;s</td><td>23.994 &mu;s</td><td>1.315 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>480.98 &mu;s</td><td>40.213 &mu;s</td><td>2.204 &mu;s</td><td>117.25 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>495.91 &mu;s</td><td>97.233 &mu;s</td><td>5.330 &mu;s</td><td>234.45 KB</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>10000</td><td>False</td><td>607.60 &mu;s</td><td>81.035 &mu;s</td><td>4.442 &mu;s</td><td>586.02 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>10000</td><td>False</td><td>650.17 &mu;s</td><td>127.383 &mu;s</td><td>6.982 &mu;s</td><td>664.18 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>False</td><td>869.22 &mu;s</td><td>291.586 &mu;s</td><td>15.983 &mu;s</td><td>1211.07 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>874.80 &mu;s</td><td>300.725 &mu;s</td><td>16.484 &mu;s</td><td>1579.07 KB</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>10000</td><td>False</td><td>920.72 &mu;s</td><td>122.474 &mu;s</td><td>6.713 &mu;s</td><td>1490.77 KB</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>10000</td><td>False</td><td>974.07 &mu;s</td><td>159.253 &mu;s</td><td>8.729 &mu;s</td><td>716.03 KB</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>1,629.18 &mu;s</td><td>351.256 &mu;s</td><td>19.254 &mu;s</td><td>1135.95 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>10000</td><td>False</td><td>2,490.51 &mu;s</td><td>124.379 &mu;s</td><td>6.818 &mu;s</td><td>937.58 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>2,547.80 &mu;s</td><td>70.212 &mu;s</td><td>3.849 &mu;s</td><td>1797.6 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>10000</td><td>False</td><td>2,677.68 &mu;s</td><td>222.867 &mu;s</td><td>12.216 &mu;s</td><td>937.69 KB</td>
+</tr><tr><td>List</td><td>StructInts</td><td>10000</td><td>True</td><td>48.99 &mu;s</td><td>3.330 &mu;s</td><td>0.183 &mu;s</td><td>117.25 KB</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>10000</td><td>True</td><td>49.59 &mu;s</td><td>3.226 &mu;s</td><td>0.177 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>10000</td><td>True</td><td>49.92 &mu;s</td><td>12.899 &mu;s</td><td>0.707 &mu;s</td><td>117.25 KB</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>10000</td><td>True</td><td>49.98 &mu;s</td><td>8.203 &mu;s</td><td>0.450 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>61.10 &mu;s</td><td>15.782 &mu;s</td><td>0.865 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>10000</td><td>True</td><td>121.77 &mu;s</td><td>46.990 &mu;s</td><td>2.576 &mu;s</td><td>546.92 KB</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>10000</td><td>True</td><td>126.44 &mu;s</td><td>83.153 &mu;s</td><td>4.558 &mu;s</td><td>546.95 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>141.70 &mu;s</td><td>22.323 &mu;s</td><td>1.224 &mu;s</td><td>117.22 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>142.81 &mu;s</td><td>24.564 &mu;s</td><td>1.346 &mu;s</td><td>117.25 KB</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>10000</td><td>True</td><td>265.47 &mu;s</td><td>68.853 &mu;s</td><td>3.774 &mu;s</td><td>586.02 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>10000</td><td>True</td><td>303.40 &mu;s</td><td>184.064 &mu;s</td><td>10.089 &mu;s</td><td>664.18 KB</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>10000</td><td>True</td><td>372.84 &mu;s</td><td>67.339 &mu;s</td><td>3.691 &mu;s</td><td>549.46 KB</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>395.55 &mu;s</td><td>109.933 &mu;s</td><td>6.026 &mu;s</td><td>588.91 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>405.17 &mu;s</td><td>53.449 &mu;s</td><td>2.930 &mu;s</td><td>588.95 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>StructInts</td><td>10000</td><td>True</td><td>549.61 &mu;s</td><td>378.876 &mu;s</td><td>20.767 &mu;s</td><td>1211.07 KB</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>10000</td><td>True</td><td>662.24 &mu;s</td><td>288.818 &mu;s</td><td>15.831 &mu;s</td><td>716.03 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>869.17 &mu;s</td><td>44.380 &mu;s</td><td>2.433 &mu;s</td><td>1579.07 KB</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>10000</td><td>True</td><td>913.03 &mu;s</td><td>36.734 &mu;s</td><td>2.013 &mu;s</td><td>1490.77 KB</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>1,104.86 &mu;s</td><td>166.500 &mu;s</td><td>9.126 &mu;s</td><td>1135.95 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>1,399.53 &mu;s</td><td>424.091 &mu;s</td><td>23.246 &mu;s</td><td>1797.6 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>10000</td><td>True</td><td>2,540.53 &mu;s</td><td>188.645 &mu;s</td><td>10.340 &mu;s</td><td>937.58 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>10000</td><td>True</td><td>2,666.65 &mu;s</td><td>514.500 &mu;s</td><td>28.201 &mu;s</td><td>937.69 KB</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>1000000</td><td>False</td><td>3,273.59 &mu;s</td><td>1,587.724 &mu;s</td><td>87.029 &mu;s</td><td>11718.89 KB</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>1000000</td><td>False</td><td>3,279.49 &mu;s</td><td>701.747 &mu;s</td><td>38.465 &mu;s</td><td>11718.89 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>1000000</td><td>False</td><td>3,355.06 &mu;s</td><td>1,632.094 &mu;s</td><td>89.461 &mu;s</td><td>11718.91 KB</td>
+</tr><tr><td>List</td><td>StructInts</td><td>1000000</td><td>False</td><td>3,385.21 &mu;s</td><td>924.373 &mu;s</td><td>50.668 &mu;s</td><td>11718.92 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>68,780.38 &mu;s</td><td>3,883.706 &mu;s</td><td>212.879 &mu;s</td><td>23437.67 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>69,169.95 &mu;s</td><td>806.321 &mu;s</td><td>44.197 &mu;s</td><td>11718.93 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>69,460.58 &mu;s</td><td>1,618.659 &mu;s</td><td>88.724 &mu;s</td><td>11718.9 KB</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>1000000</td><td>False</td><td>81,617.96 &mu;s</td><td>40,801.157 &mu;s</td><td>2,236.449 &mu;s</td><td>54688.2 KB</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>92,534.76 &mu;s</td><td>66,008.585 &mu;s</td><td>3,618.153 &mu;s</td><td>58517.29 KB</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>1000000</td><td>False</td><td>94,274.66 &mu;s</td><td>24,720.356 &mu;s</td><td>1,355.006 &mu;s</td><td>54688.35 KB</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>95,366.36 &mu;s</td><td>27,677.123 &mu;s</td><td>1,517.076 &mu;s</td><td>63058.68 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>98,468.03 &mu;s</td><td>72,548.019 &mu;s</td><td>3,976.602 &mu;s</td><td>63058.09 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>152,350.92 &mu;s</td><td>96,443.727 &mu;s</td><td>5,286.406 &mu;s</td><td>66406.88 KB</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>162,289.78 &mu;s</td><td>6,004.485 &mu;s</td><td>329.126 &mu;s</td><td>58594.55 KB</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>1000000</td><td>False</td><td>193,554.06 &mu;s</td><td>145,298.959 &mu;s</td><td>7,964.326 &mu;s</td><td>75753.25 KB</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>200,634.72 &mu;s</td><td>96,156.317 &mu;s</td><td>5,270.652 &mu;s</td><td>157880.99 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>211,491.02 &mu;s</td><td>29,837.355 &mu;s</td><td>1,635.486 &mu;s</td><td>167306.29 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>False</td><td>252,204.45 &mu;s</td><td>51,242.302 &mu;s</td><td>2,808.763 &mu;s</td><td>121094.77 KB</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>739,231.10 &mu;s</td><td>301,149.846 &mu;s</td><td>16,507.039 &mu;s</td><td>117746.27 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>1000000</td><td>False</td><td>1,345,858.57 &mu;s</td><td>672,216.265 &mu;s</td><td>36,846.442 &mu;s</td><td>93794.8 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>1,354,303.10 &mu;s</td><td>358,864.628 &mu;s</td><td>19,670.581 &mu;s</td><td>93779.76 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>1000000</td><td>False</td><td>1,457,313.17 &mu;s</td><td>687,775.763 &mu;s</td><td>37,699.310 &mu;s</td><td>179626.93 KB</td>
+</tr><tr><td>List</td><td>StructInts</td><td>1000000</td><td>True</td><td>3,286.39 &mu;s</td><td>723.511 &mu;s</td><td>39.658 &mu;s</td><td>11718.92 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>StructInts</td><td>1000000</td><td>True</td><td>3,293.87 &mu;s</td><td>991.939 &mu;s</td><td>54.372 &mu;s</td><td>11718.91 KB</td>
+</tr><tr><td>ImmutableArray</td><td>StructInts</td><td>1000000</td><td>True</td><td>3,296.75 &mu;s</td><td>921.815 &mu;s</td><td>50.528 &mu;s</td><td>11718.88 KB</td>
+</tr><tr><td>Array</td><td>StructInts</td><td>1000000</td><td>True</td><td>3,300.02 &mu;s</td><td>160.762 &mu;s</td><td>8.812 &mu;s</td><td>11718.88 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>4,542.70 &mu;s</td><td>3,562.142 &mu;s</td><td>195.253 &mu;s</td><td>11718.9 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>18,011.67 &mu;s</td><td>3,978.985 &mu;s</td><td>218.102 &mu;s</td><td>11718.93 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>21,387.96 &mu;s</td><td>359.317 &mu;s</td><td>19.695 &mu;s</td><td>11718.9 KB</td>
+</tr><tr><td>ImmutableList</td><td>StructInts</td><td>1000000</td><td>True</td><td>84,500.11 &mu;s</td><td>27,701.055 &mu;s</td><td>1,518.388 &mu;s</td><td>54688.21 KB</td>
+</tr><tr><td>HashSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>92,074.00 &mu;s</td><td>22,918.486 &mu;s</td><td>1,256.240 &mu;s</td><td>58516.56 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>93,465.42 &mu;s</td><td>24,953.649 &mu;s</td><td>1,367.794 &mu;s</td><td>63059.83 KB</td>
+</tr><tr><td>LinkedList</td><td>StructInts</td><td>1000000</td><td>True</td><td>94,579.08 &mu;s</td><td>28,793.805 &mu;s</td><td>1,578.286 &mu;s</td><td>54688.34 KB</td>
+</tr><tr><td>Dictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>96,648.89 &mu;s</td><td>43,997.786 &mu;s</td><td>2,411.667 &mu;s</td><td>63058.48 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>105,094.11 &mu;s</td><td>66,772.569 &mu;s</td><td>3,660.030 &mu;s</td><td>66407.01 KB</td>
+</tr><tr><td>SortedSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>109,118.06 &mu;s</td><td>101,020.466 &mu;s</td><td>5,537.273 &mu;s</td><td>58594.55 KB</td>
+</tr><tr><td>SortedList</td><td>StructInts</td><td>1000000</td><td>True</td><td>117,013.70 &mu;s</td><td>72,442.375 &mu;s</td><td>3,970.811 &mu;s</td><td>75753.15 KB</td>
+</tr><tr><td>FrozenSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>206,294.76 &mu;s</td><td>125,324.070 &mu;s</td><td>6,869.435 &mu;s</td><td>157881.09 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>212,502.02 &mu;s</td><td>37,991.836 &mu;s</td><td>2,082.461 &mu;s</td><td>167306.32 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>StructInts</td><td>1000000</td><td>True</td><td>217,075.62 &mu;s</td><td>33,384.496 &mu;s</td><td>1,829.917 &mu;s</td><td>121094.81 KB</td>
+</tr><tr><td>SortedDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>273,297.77 &mu;s</td><td>180,101.917 &mu;s</td><td>9,871.994 &mu;s</td><td>117746.1 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>455,724.87 &mu;s</td><td>154,422.714 &mu;s</td><td>8,464.430 &mu;s</td><td>179627.3 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>StructInts</td><td>1000000</td><td>True</td><td>1,376,826.17 &mu;s</td><td>647,504.479 &mu;s</td><td>35,491.905 &mu;s</td><td>93801.93 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>StructInts</td><td>1000000</td><td>True</td><td>1,428,985.53 &mu;s</td><td>1,468,745.785 &mu;s</td><td>80,506.913 &mu;s</td><td>93779.72 KB</td>
+</tr></tbody></table>
+</body>
+</html>

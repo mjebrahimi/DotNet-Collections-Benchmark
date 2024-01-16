@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Title</title>
+<style type="text/css">
+    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; }
+    h1, h2 { border-bottom: solid 1px #D8DEE4;}
+    h1, h2, h3 { padding-bottom: 0.3em; }
+    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
+    td, th { padding: 6px 13px; border: 1px solid #CCC; text-align: right; white-space: nowrap; }
+    tr td:first-child { text-align: left; }
+    tr { background-color: #FFF !important; border-top: 1px solid #CCC; }
+    tr:nth-child(even):not(.divider) { background: #F8F8F8 !important; }
+    tr.divider { border: 0; font-size: 10px; }
+    tr.divider td { padding: 0; border: 0; }
+    pre { background: #EFEFEF; padding: 0 1em; }
+    thead th { background-color: #EFEFEF; }
+    tbody tr:not(.divider):hover { background-color: #EFEFEF !important; border: 2px solid #ADADAD; }
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.4/css/colReorder.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style type="text/css">
+    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; }
+    thead th:hover { background-color: #E0E0E0; }
+</style>
+</head>
+<body>
+<h1>Title</h1>
+<pre>
+<code>
+BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]   : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3
+</code>
+</pre>
+<h2>Contains benchmark for 'ClassStrings' type</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Categories</th><th>DataType</th><th>Length</th><th>Existed</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Allocated</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FrozenSet</strong></td>
+<td><strong>O(1)</strong></td>
+<td><strong>ClassStrings</strong></td>
+<td><strong>1000</strong></td>
+<td style="background-color: #CCFFFF;"><strong>False</strong></td>
+<td style="background-color: #99FF99;"><strong>23.75 ns</strong></td>
+<td><strong>2.486 ns</strong></td>
+<td><strong>0.136 ns</strong></td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>FrozenDictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">23.77 ns</td>
+<td>2.596 ns</td>
+<td>0.142 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>HashSet</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">25.09 ns</td>
+<td>3.944 ns</td>
+<td>0.216 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Dictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">26.48 ns</td>
+<td>2.090 ns</td>
+<td>0.115 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ReadOnlyDictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">27.76 ns</td>
+<td>1.982 ns</td>
+<td>0.109 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableDictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #99FF99;">30.32 ns</td>
+<td>2.906 ns</td>
+<td>0.159 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableHashSet</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #9BFF99;">40.72 ns</td>
+<td>10.356 ns</td>
+<td>0.568 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>&#39;List (Sorted + BinarySearch)&#39;</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B3FF99;">318.19 ns</td>
+<td>40.186 ns</td>
+<td>2.203 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedSet</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B3FF99;">318.67 ns</td>
+<td>34.975 ns</td>
+<td>1.917 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B3FF99;">320.15 ns</td>
+<td>20.158 ns</td>
+<td>1.105 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableArray (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B4FF99;">326.21 ns</td>
+<td>57.223 ns</td>
+<td>3.137 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedList</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B4FF99;">327.96 ns</td>
+<td>21.865 ns</td>
+<td>1.199 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedDictionary</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B5FF99;">332.48 ns</td>
+<td>108.409 ns</td>
+<td>5.942 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedSet</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B5FF99;">333.72 ns</td>
+<td>22.293 ns</td>
+<td>1.222 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedDictionary</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B7FF99;">364.69 ns</td>
+<td>68.964 ns</td>
+<td>3.780 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableList (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #B7FF99;">366.50 ns</td>
+<td>47.879 ns</td>
+<td>2.624 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ReadOnlyCollection</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #D6FF99;">791.51 ns</td>
+<td>141.688 ns</td>
+<td>7.766 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableArray</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FFBD99;">3,974.60 ns</td>
+<td>342.106 ns</td>
+<td>18.752 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>List</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FFB699;">4,067.15 ns</td>
+<td>1,557.257 ns</td>
+<td>85.359 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #CCFFFF;">False</td>
+<td style="background-color: #FF9999;">4,236.23 ns</td>
+<td>505.064 ns</td>
+<td>27.684 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Categories</th><th>DataType</th><th>Length</th><th>Existed</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Allocated</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FrozenSet</strong></td>
+<td><strong>O(1)</strong></td>
+<td><strong>ClassStrings</strong></td>
+<td><strong>1000</strong></td>
+<td style="background-color: #FFCCFF;"><strong>True</strong></td>
+<td style="background-color: #99FF99;"><strong>27.47 ns</strong></td>
+<td><strong>1.917 ns</strong></td>
+<td><strong>0.105 ns</strong></td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>FrozenDictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">27.90 ns</td>
+<td>1.254 ns</td>
+<td>0.069 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Dictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">29.96 ns</td>
+<td>2.548 ns</td>
+<td>0.140 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>HashSet</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #99FF99;">30.39 ns</td>
+<td>3.248 ns</td>
+<td>0.178 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ReadOnlyDictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">32.11 ns</td>
+<td>4.866 ns</td>
+<td>0.267 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableDictionary</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9AFF99;">34.77 ns</td>
+<td>2.034 ns</td>
+<td>0.111 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableHashSet</td>
+<td>O(1)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #9DFF99;">45.61 ns</td>
+<td>7.597 ns</td>
+<td>0.416 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C1FF99;">246.53 ns</td>
+<td>19.237 ns</td>
+<td>1.054 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C1FF99;">247.97 ns</td>
+<td>40.149 ns</td>
+<td>2.201 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>List (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C2FF99;">252.79 ns</td>
+<td>63.682 ns</td>
+<td>3.491 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedSet</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C2FF99;">253.33 ns</td>
+<td>65.397 ns</td>
+<td>3.585 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedList</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C3FF99;">259.50 ns</td>
+<td>16.546 ns</td>
+<td>0.907 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedSet</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C5FF99;">266.93 ns</td>
+<td>64.864 ns</td>
+<td>3.555 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>SortedDictionary</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C6FF99;">278.50 ns</td>
+<td>79.701 ns</td>
+<td>4.369 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableSortedDictionary</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C8FF99;">290.57 ns</td>
+<td>22.471 ns</td>
+<td>1.232 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableList (Sorted + BinarySearch)</td>
+<td>O(log(N))</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #C8FF99;">290.76 ns</td>
+<td>17.907 ns</td>
+<td>0.982 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ReadOnlyCollection</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #D7FF99;">392.40 ns</td>
+<td>62.709 ns</td>
+<td>3.437 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>ImmutableArray</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FFB699;">1,914.95 ns</td>
+<td>127.458 ns</td>
+<td>6.986 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>Array</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FFB399;">1,930.61 ns</td>
+<td>353.032 ns</td>
+<td>19.351 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+<tr>
+<td>List</td>
+<td>O(N)</td>
+<td>ClassStrings</td>
+<td>1000</td>
+<td style="background-color: #FFCCFF;">True</td>
+<td style="background-color: #FF9999;">1,995.30 ns</td>
+<td>1,130.778 ns</td>
+<td>61.982 ns</td>
+<td style="background-color: #99FF99;"><strong>-</strong></td>
+</tr>
+</tbody>
+</table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/colreorder/1.5.4/js/dataTables.colReorder.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+</body>
+<script>
+    $(document).ready( function () {
+        DataTable.ext.type.order['custom-orderer-pre'] = function (d) {
+            d = d.replace(/(<([^>]+)>)/gi, ""); //remove html tags
+            if (!d.match(/^\d/)) //if not started with number
+                return d;
+            var regex = /[\d,]+(?:\.\d+)?/;
+            var number = d.match(regex)[0].replace(/,/g, ""); //extract number
+            return parseFloat(number); //Number
+        };
+        $('table').DataTable({
+            info: false,
+            paging: false,
+            colReorder: true,
+            order: [], //remove default order
+            columnDefs: [
+                {
+                    type: 'custom-orderer',
+                    targets: '_all'
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: ['colvis']
+        });
+    });
+</script>
+</html>

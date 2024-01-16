@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmark of Collection Initializing in terms of Allocation Size</title>
+<style type="text/css">
+    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; }
+    h1, h2 { border-bottom: solid 1px #D8DEE4;}
+    h1, h2, h3 { padding-bottom: 0.3em; }
+    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
+    td, th { padding: 6px 13px; border: 1px solid #CCC; text-align: right; white-space: nowrap; }
+    tr { background-color: #FFF !important; border-top: 1px solid #CCC; }
+    tr:nth-child(even):not(.divider) { background: #F8F8F8 !important; }
+    tr.divider { border: 0; font-size: 10px; }
+    tr.divider td { padding: 0; border: 0; }
+    pre { background: #EFEFEF; padding: 0 1em; }
+    thead th { background-color: #EFEFEF; }
+    tbody tr:not(.divider):hover { background-color: #EFEFEF !important; border: 2px solid #ADADAD; }
+    .powered-by { text-align: center; margin-bottom: -20px !important; font-weight: bold; }
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.4/css/colReorder.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<style type="text/css">
+    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; }
+    thead th:hover { background-color: #E0E0E0; }
+</style>
+</head>
+<body>
+<h1>Benchmark of Collection Initializing in terms of Allocation Size</h1>
+<pre>
+<code>
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.100
+  [Host]   : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+
+Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3
+</code>
+</pre>
+<h2>Comparison: Allocated</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Length</th><th>Sorted</th><th>Int32</th><th>String</th><th>StructInts</th><th>ClassInts</th><th>RecordStructInts</th><th>RecordClassInts</th><th>StructStrings</th><th>ClassStrings</th><th>RecordStructStrings</th><th>RecordClassStrings</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">Array</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array (Sorted)</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyCollection</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">39.11 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">39.12 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List (Sorted)</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">39.12 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.46 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.46 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray (Sorted)</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #A9FF99">78.17 KB</td>
+<td style="background-color: #B4FF99">156.3 KB</td>
+<td style="background-color: #B3FF99">234.45 KB</td>
+<td style="background-color: #B4FF99">156.3 KB</td>
+<td style="background-color: #B3FF99">234.45 KB</td>
+<td style="background-color: #B4FF99">156.3 KB</td>
+<td style="background-color: #C0FF99">468.85 KB</td>
+<td style="background-color: #B4FF99">156.3 KB</td>
+<td style="background-color: #C0FF99">468.85 KB</td>
+<td style="background-color: #B4FF99">156.3 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">HashSet</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #C6FF99">158.02 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #E7FF99">549.46 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #B4FF99">236.96 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #E2FF99">745.99 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #AEFF99">355.36 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">Dictionary</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #D2FF99">197.47 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #EBFF99">588.91 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #BCFF99">276.41 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #E9FF99">824.91 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #BBFF99">434.28 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyDictionary</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #D2FF99">197.51 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #EBFF99">588.95 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #BCFF99">276.45 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #E9FF99">824.95 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #BBFF99">434.32 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedList</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #DFFF99">246.45 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #F6FF99">716.03 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #D3FF99">403.53 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #F9FF99">1069.23 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #DBFF99">678.61 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenSet</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #F9FF99">394.34 KB</td>
+<td style="background-color: #FFDB99">945.63 KB</td>
+<td style="background-color: #FFD799">1490.77 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+<td style="background-color: #FDFF99">865.77 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+<td style="background-color: #FFD899">1999.95 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+<td style="background-color: #FEFF99">1219.54 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedSet</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FCFF99">429.76 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #EBFF99">586.02 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #EBFF99">586.02 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #ECFF99">859.47 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #ECFF99">859.47 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FEFF99">468.8 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #E7FF99">546.92 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #E7FF99">546.92 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #D5FF99">625.05 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #D5FF99">625.05 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">LinkedList</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FEFF99">468.82 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #E7FF99">546.95 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #E7FF99">546.95 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #D5FF99">625.07 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #D5FF99">625.07 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedSet</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFF99">507.92 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+<td style="background-color: #F2FF99">664.18 KB</td>
+<td style="background-color: #FDFF99">546.98 KB</td>
+<td style="background-color: #F2FF99">664.18 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+<td style="background-color: #ECFF99">859.51 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+<td style="background-color: #ECFF99">859.51 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenDictionary</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFD99">521.73 KB</td>
+<td style="background-color: #FFCA99">1044.19 KB</td>
+<td style="background-color: #FFCD99">1579.07 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+<td style="background-color: #FFFF99">954.07 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+<td style="background-color: #FFCA99">2166.84 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+<td style="background-color: #FFFC99">1387.48 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableHashSet</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFB99">546.96 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #FFFF99">937.58 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #EFFF99">625.08 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #FAFF99">1093.83 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #DDFF99">703.21 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableDictionary</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFB99">547.06 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #FFFF99">937.69 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #EFFF99">625.19 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #FDFF99">1172.08 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #E5FF99">781.46 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedDictionary</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFEC99">666.38 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FFF399">1135.95 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FCFF99">823.45 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FFF599">1528.21 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FCFF99">1137.59 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedDictionary</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFB699">938.21 KB</td>
+<td style="background-color: #FF9999">1172.61 KB</td>
+<td style="background-color: #FF9999">1797.6 KB</td>
+<td style="background-color: #FF9999">1172.6 KB</td>
+<td style="background-color: #FF9999">1797.6 KB</td>
+<td style="background-color: #FF9999">1172.6 KB</td>
+<td style="background-color: #FF9999">2422.64 KB</td>
+<td style="background-color: #FF9999">1172.61 KB</td>
+<td style="background-color: #FF9999">2422.64 KB</td>
+<td style="background-color: #FF9999">1172.61 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList (Sorted)</td>
+<td style="background-color: #FFCCFF">10000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FF9999">976.68 KB</td>
+<td style="background-color: #FFCF99">1015.75 KB</td>
+<td style="background-color: #FFEE99">1211.07 KB</td>
+<td style="background-color: #FFCF99">1015.74 KB</td>
+<td style="background-color: #FFEE99">1211.07 KB</td>
+<td style="background-color: #FFCF99">1015.74 KB</td>
+<td style="background-color: #FFF799">1484.52 KB</td>
+<td style="background-color: #FFCF99">1015.75 KB</td>
+<td style="background-color: #FFF799">1484.52 KB</td>
+<td style="background-color: #FFCF99">1015.75 KB</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Length</th><th>Sorted</th><th>Int32</th><th>String</th><th>StructInts</th><th>ClassInts</th><th>RecordStructInts</th><th>RecordClassInts</th><th>StructStrings</th><th>ClassStrings</th><th>RecordStructStrings</th><th>RecordClassStrings</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">ImmutableArray</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray (Sorted)</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array (Sorted)</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99"><strong>39.09 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>117.22 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+<td style="background-color: #99FF99"><strong>234.42 KB</strong></td>
+<td style="background-color: #99FF99"><strong>78.15 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyCollection</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">39.11 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.17 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">39.12 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List (Sorted)</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">39.12 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">117.25 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+<td style="background-color: #99FF99">234.45 KB</td>
+<td style="background-color: #99FF99">78.18 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">HashSet</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #C6FF99">158.02 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #E7FF99">549.46 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #B4FF99">236.96 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #E2FF99">745.99 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+<td style="background-color: #AEFF99">355.36 KB</td>
+<td style="background-color: #C1FF99">197.49 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">Dictionary</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #D2FF99">197.47 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #EBFF99">588.91 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #BCFF99">276.41 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #E9FF99">824.91 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+<td style="background-color: #BBFF99">434.28 KB</td>
+<td style="background-color: #D5FF99">276.41 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyDictionary</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #D2FF99">197.51 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #EBFF99">588.95 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #BCFF99">276.45 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #E9FF99">824.95 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+<td style="background-color: #BBFF99">434.32 KB</td>
+<td style="background-color: #D5FF99">276.45 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedList</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #DFFF99">246.45 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #F6FF99">716.03 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #D3FF99">403.53 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #F9FF99">1069.23 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+<td style="background-color: #DBFF99">678.61 KB</td>
+<td style="background-color: #E8FF99">364.46 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenSet</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #F9FF99">394.34 KB</td>
+<td style="background-color: #FFDB99">945.63 KB</td>
+<td style="background-color: #FFD799">1490.77 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+<td style="background-color: #FDFF99">865.77 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+<td style="background-color: #FFD899">1999.93 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+<td style="background-color: #FEFF99">1219.77 KB</td>
+<td style="background-color: #FFF399">748.11 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedSet</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FCFF99">429.76 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #EBFF99">586.02 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #EBFF99">586.02 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #ECFF99">859.47 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+<td style="background-color: #ECFF99">859.47 KB</td>
+<td style="background-color: #FDFF99">546.95 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FEFF99">468.8 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #E7FF99">546.92 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #E7FF99">546.92 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #D5FF99">625.05 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+<td style="background-color: #D5FF99">625.05 KB</td>
+<td style="background-color: #F7FF99">468.8 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">LinkedList</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FEFF99">468.82 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #E7FF99">546.95 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #E7FF99">546.95 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #D5FF99">625.07 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+<td style="background-color: #D5FF99">625.07 KB</td>
+<td style="background-color: #F7FF99">468.82 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedSet</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFF99">507.92 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+<td style="background-color: #F2FF99">664.18 KB</td>
+<td style="background-color: #FDFF99">546.98 KB</td>
+<td style="background-color: #F2FF99">664.18 KB</td>
+<td style="background-color: #FDFF99">546.98 KB</td>
+<td style="background-color: #ECFF99">859.51 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+<td style="background-color: #ECFF99">859.51 KB</td>
+<td style="background-color: #FDFF99">546.99 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenDictionary</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFD99">521.73 KB</td>
+<td style="background-color: #FFCA99">1044.19 KB</td>
+<td style="background-color: #FFCD99">1579.07 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+<td style="background-color: #FFFF99">954.07 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+<td style="background-color: #FFCA99">2166.79 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+<td style="background-color: #FFFC99">1385.44 KB</td>
+<td style="background-color: #FFDF99">914.99 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableHashSet</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFB99">546.95 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #FFFF99">937.58 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #EFFF99">625.08 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #FAFF99">1093.83 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+<td style="background-color: #DDFF99">703.21 KB</td>
+<td style="background-color: #FDFF99">546.96 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableDictionary</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFB99">547.06 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #FFFF99">937.69 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #EFFF99">625.19 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #FDFF99">1172.08 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+<td style="background-color: #E5FF99">781.46 KB</td>
+<td style="background-color: #FFFF99">625.19 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedDictionary</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFEC99">666.38 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FFF399">1135.95 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FCFF99">823.45 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FFF599">1528.21 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+<td style="background-color: #FCFF99">1137.59 KB</td>
+<td style="background-color: #FFEB99">823.45 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedDictionary</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFB699">938.2 KB</td>
+<td style="background-color: #FF9999">1172.61 KB</td>
+<td style="background-color: #FF9999">1797.6 KB</td>
+<td style="background-color: #FF9999">1172.6 KB</td>
+<td style="background-color: #FF9999">1797.6 KB</td>
+<td style="background-color: #FF9999">1172.6 KB</td>
+<td style="background-color: #FF9999">2422.64 KB</td>
+<td style="background-color: #FF9999">1172.61 KB</td>
+<td style="background-color: #FF9999">2422.64 KB</td>
+<td style="background-color: #FF9999">1172.61 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList (Sorted)</td>
+<td style="background-color: #CCFFFF">10000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FF9999">976.68 KB</td>
+<td style="background-color: #FFCF99">1015.75 KB</td>
+<td style="background-color: #FFEE99">1211.07 KB</td>
+<td style="background-color: #FFCF99">1015.74 KB</td>
+<td style="background-color: #FFEE99">1211.07 KB</td>
+<td style="background-color: #FFCF99">1015.74 KB</td>
+<td style="background-color: #FFF799">1484.52 KB</td>
+<td style="background-color: #FFCF99">1015.75 KB</td>
+<td style="background-color: #FFF799">1484.52 KB</td>
+<td style="background-color: #FFCF99">1015.75 KB</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Length</th><th>Sorted</th><th>Int32</th><th>String</th><th>StructInts</th><th>ClassInts</th><th>RecordStructInts</th><th>RecordClassInts</th><th>StructStrings</th><th>ClassStrings</th><th>RecordStructStrings</th><th>RecordClassStrings</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">ImmutableArray</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99"><strong>3906.32 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>11718.89 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>11718.88 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.56 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.59 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.59 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99"><strong>3906.32 KB</strong></td>
+<td style="background-color: #99FF99">7812.55 KB</td>
+<td style="background-color: #99FF99"><strong>11718.89 KB</strong></td>
+<td style="background-color: #99FF99">7812.56 KB</td>
+<td style="background-color: #99FF99">11718.89 KB</td>
+<td style="background-color: #99FF99"><strong>7812.56 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.59 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.59 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyCollection</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">3906.34 KB</td>
+<td style="background-color: #99FF99">7812.93 KB</td>
+<td style="background-color: #99FF99">11718.91 KB</td>
+<td style="background-color: #99FF99">7813.05 KB</td>
+<td style="background-color: #99FF99">11718.91 KB</td>
+<td style="background-color: #99FF99">7813.11 KB</td>
+<td style="background-color: #99FF99">23437.61 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+<td style="background-color: #99FF99">23437.61 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">3906.35 KB</td>
+<td style="background-color: #99FF99">7812.97 KB</td>
+<td style="background-color: #99FF99">11718.92 KB</td>
+<td style="background-color: #99FF99">7813.07 KB</td>
+<td style="background-color: #99FF99">11718.92 KB</td>
+<td style="background-color: #99FF99">7813.1 KB</td>
+<td style="background-color: #99FF99">23437.62 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+<td style="background-color: #99FF99">23437.62 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">Array (Sorted)</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">3906.4 KB</td>
+<td style="background-color: #99FF99">7812.91 KB</td>
+<td style="background-color: #99FF99">11718.9 KB</td>
+<td style="background-color: #99FF99">7812.65 KB</td>
+<td style="background-color: #99FF99">11718.9 KB</td>
+<td style="background-color: #99FF99"><strong>7812.56 KB</strong></td>
+<td style="background-color: #99FF99">23437.91 KB</td>
+<td style="background-color: #99FF99">7812.91 KB</td>
+<td style="background-color: #99FF99">23437.91 KB</td>
+<td style="background-color: #99FF99">7812.91 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List (Sorted)</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #99FF99">3906.44 KB</td>
+<td style="background-color: #99FF99">7812.95 KB</td>
+<td style="background-color: #99FF99">11718.93 KB</td>
+<td style="background-color: #99FF99">7812.68 KB</td>
+<td style="background-color: #99FF99">11718.93 KB</td>
+<td style="background-color: #99FF99">7812.59 KB</td>
+<td style="background-color: #99FF99">23437.95 KB</td>
+<td style="background-color: #99FF99">7812.95 KB</td>
+<td style="background-color: #99FF99">23437.95 KB</td>
+<td style="background-color: #99FF99">7812.95 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray (Sorted)</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #A9FF99">7812.77 KB</td>
+<td style="background-color: #B4FF99">15625.44 KB</td>
+<td style="background-color: #B3FF99">23437.67 KB</td>
+<td style="background-color: #B4FF99">15625.18 KB</td>
+<td style="background-color: #B3FF99">23437.67 KB</td>
+<td style="background-color: #B4FF99">15625.27 KB</td>
+<td style="background-color: #C0FF99">46875.44 KB</td>
+<td style="background-color: #B4FF99">15625.44 KB</td>
+<td style="background-color: #C0FF99">46875.44 KB</td>
+<td style="background-color: #B4FF99">15625.44 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">HashSet</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #CDFF99">18168.91 KB</td>
+<td style="background-color: #C9FF99">22710.99 KB</td>
+<td style="background-color: #EBFF99">58517.29 KB</td>
+<td style="background-color: #C9FF99">22712.03 KB</td>
+<td style="background-color: #BBFF99">27251.66 KB</td>
+<td style="background-color: #C9FF99">22712.03 KB</td>
+<td style="background-color: #E7FF99">79957.29 KB</td>
+<td style="background-color: #C9FF99">22708.95 KB</td>
+<td style="background-color: #B7FF99">40876.04 KB</td>
+<td style="background-color: #C9FF99">22708.95 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">Dictionary</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #DAFF99">22709.02 KB</td>
+<td style="background-color: #DFFF99">31792.54 KB</td>
+<td style="background-color: #EFFF99">63058.68 KB</td>
+<td style="background-color: #DFFF99">31792.52 KB</td>
+<td style="background-color: #C4FF99">31792.5 KB</td>
+<td style="background-color: #DFFF99">31792.49 KB</td>
+<td style="background-color: #EFFF99">89040.86 KB</td>
+<td style="background-color: #DFFF99">31792.43 KB</td>
+<td style="background-color: #C4FF99">49959.52 KB</td>
+<td style="background-color: #DFFF99">31792.37 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyDictionary</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #DAFF99">22709.06 KB</td>
+<td style="background-color: #DFFF99">31792.55 KB</td>
+<td style="background-color: #EFFF99">63058.09 KB</td>
+<td style="background-color: #DFFF99">31792.58 KB</td>
+<td style="background-color: #C4FF99">31792.54 KB</td>
+<td style="background-color: #DFFF99">31792.56 KB</td>
+<td style="background-color: #EFFF99">89039.28 KB</td>
+<td style="background-color: #DFFF99">31792.41 KB</td>
+<td style="background-color: #C4FF99">49959.55 KB</td>
+<td style="background-color: #DFFF99">31792.47 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedList</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #E6FF99">27591.96 KB</td>
+<td style="background-color: #EFFF99">40590.23 KB</td>
+<td style="background-color: #F9FF99">75753.25 KB</td>
+<td style="background-color: #EFFF99">40585.89 KB</td>
+<td style="background-color: #D9FF99">44488.06 KB</td>
+<td style="background-color: #EFFF99">40585.89 KB</td>
+<td style="background-color: #FCFF99">113453.33 KB</td>
+<td style="background-color: #EFFF99">40581.96 KB</td>
+<td style="background-color: #E2FF99">74373.95 KB</td>
+<td style="background-color: #EFFF99">40581.68 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedSet</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FCFF99">42969.5 KB</td>
+<td style="background-color: #FDFF99">54687.96 KB</td>
+<td style="background-color: #EBFF99">58594.55 KB</td>
+<td style="background-color: #FDFF99">54687.98 KB</td>
+<td style="background-color: #EBFF99">58594.55 KB</td>
+<td style="background-color: #FDFF99">54687.95 KB</td>
+<td style="background-color: #ECFF99">85937.96 KB</td>
+<td style="background-color: #FDFF99">54687.96 KB</td>
+<td style="background-color: #ECFF99">85937.68 KB</td>
+<td style="background-color: #FDFF99">54687.96 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenSet</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FDFF99">44677.32 KB</td>
+<td style="background-color: #FFC899">105720.5 KB</td>
+<td style="background-color: #FFCD99">157880.99 KB</td>
+<td style="background-color: #FFE999">83013.53 KB</td>
+<td style="background-color: #FFFF99">95365.64 KB</td>
+<td style="background-color: #FFE999">83011.54 KB</td>
+<td style="background-color: #FFD099">210573.43 KB</td>
+<td style="background-color: #FFE999">83011.25 KB</td>
+<td style="background-color: #FFFF99">132428.42 KB</td>
+<td style="background-color: #FFE999">83011.25 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FEFF99">46875.68 KB</td>
+<td style="background-color: #F7FF99">46875.28 KB</td>
+<td style="background-color: #E7FF99">54688.2 KB</td>
+<td style="background-color: #F7FF99">46875.37 KB</td>
+<td style="background-color: #E7FF99">54688.2 KB</td>
+<td style="background-color: #F7FF99">46875.37 KB</td>
+<td style="background-color: #D5FF99">62500.18 KB</td>
+<td style="background-color: #F7FF99">46875.13 KB</td>
+<td style="background-color: #D5FF99">62500.23 KB</td>
+<td style="background-color: #F7FF99">46875.13 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">LinkedList</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FEFF99">46875.79 KB</td>
+<td style="background-color: #F7FF99">46875.44 KB</td>
+<td style="background-color: #E7FF99">54688.35 KB</td>
+<td style="background-color: #F7FF99">46875.5 KB</td>
+<td style="background-color: #E7FF99">54688.28 KB</td>
+<td style="background-color: #F7FF99">46875.44 KB</td>
+<td style="background-color: #D5FF99">62500.32 KB</td>
+<td style="background-color: #F7FF99">46875.23 KB</td>
+<td style="background-color: #D5FF99">62500.26 KB</td>
+<td style="background-color: #F7FF99">46875.19 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedSet</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFF99">50783.16 KB</td>
+<td style="background-color: #FDFF99">54687.72 KB</td>
+<td style="background-color: #F3FF99">66406.88 KB</td>
+<td style="background-color: #FDFF99">54688.02 KB</td>
+<td style="background-color: #F3FF99">66406.89 KB</td>
+<td style="background-color: #FDFF99">54688.03 KB</td>
+<td style="background-color: #ECFF99">85938 KB</td>
+<td style="background-color: #FDFF99">54688 KB</td>
+<td style="background-color: #ECFF99">85938 KB</td>
+<td style="background-color: #FDFF99">54688 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableHashSet</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFB99">54691.8 KB</td>
+<td style="background-color: #FDFF99">54693.22 KB</td>
+<td style="background-color: #FFFF99">93794.8 KB</td>
+<td style="background-color: #FDFF99">54699.92 KB</td>
+<td style="background-color: #EFFF99">62507.03 KB</td>
+<td style="background-color: #FDFF99">54693.65 KB</td>
+<td style="background-color: #FAFF99">109426.2 KB</td>
+<td style="background-color: #FDFF99">54693.13 KB</td>
+<td style="background-color: #DDFF99">70321.09 KB</td>
+<td style="background-color: #FDFF99">54693.03 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableDictionary</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFFB99">54698.62 KB</td>
+<td style="background-color: #FFFF99">62510.23 KB</td>
+<td style="background-color: #FFFF99">93779.76 KB</td>
+<td style="background-color: #FFFF99">62508.02 KB</td>
+<td style="background-color: #EFFF99">62513.92 KB</td>
+<td style="background-color: #FFFF99">62512.82 KB</td>
+<td style="background-color: #FDFF99">117223.37 KB</td>
+<td style="background-color: #FFFF99">62506.59 KB</td>
+<td style="background-color: #E5FF99">78133.21 KB</td>
+<td style="background-color: #FFFF99">62506.65 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenDictionary</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFF799">58008.48 KB</td>
+<td style="background-color: #FFA299">116757.2 KB</td>
+<td style="background-color: #FFC099">167306.29 KB</td>
+<td style="background-color: #FFD199">100884.11 KB</td>
+<td style="background-color: #FFF999">104790.37 KB</td>
+<td style="background-color: #FFD199">100883.94 KB</td>
+<td style="background-color: #FFBD99">228443.2 KB</td>
+<td style="background-color: #FFD199">100884.14 KB</td>
+<td style="background-color: #FFF799">150301.13 KB</td>
+<td style="background-color: #FFD199">100884 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedDictionary</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFE899">69596.26 KB</td>
+<td style="background-color: #FFE599">86480.41 KB</td>
+<td style="background-color: #FFF199">117746.27 KB</td>
+<td style="background-color: #FFE599">86492.76 KB</td>
+<td style="background-color: #FDFF99">86481.09 KB</td>
+<td style="background-color: #FFE599">86481.55 KB</td>
+<td style="background-color: #FFF299">159351.57 KB</td>
+<td style="background-color: #FFE599">86480.41 KB</td>
+<td style="background-color: #FDFF99">120272.13 KB</td>
+<td style="background-color: #FFE599">86480.13 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedDictionary</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FFB699">93757.37 KB</td>
+<td style="background-color: #FF9999">117189.05 KB</td>
+<td style="background-color: #FF9999">179626.93 KB</td>
+<td style="background-color: #FF9999">117193.05 KB</td>
+<td style="background-color: #FF9999">179629.06 KB</td>
+<td style="background-color: #FF9999">117195.7 KB</td>
+<td style="background-color: #FF9999">242110.66 KB</td>
+<td style="background-color: #FF9999">117188.41 KB</td>
+<td style="background-color: #FF9999">242110.66 KB</td>
+<td style="background-color: #FF9999">117188.7 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList (Sorted)</td>
+<td style="background-color: #FFCCFF">1000000</td>
+<td style="text-align: left;background-color: #FFCCFF">False</td>
+<td style="background-color: #FF9999">97657.35 KB</td>
+<td style="background-color: #FFCF99">101563.09 KB</td>
+<td style="background-color: #FFEE99">121094.77 KB</td>
+<td style="background-color: #FFCF99">101563.36 KB</td>
+<td style="background-color: #FFEE99">121094.77 KB</td>
+<td style="background-color: #FFCF99">101563.36 KB</td>
+<td style="background-color: #FFF799">148437.73 KB</td>
+<td style="background-color: #FFCF99">101563.01 KB</td>
+<td style="background-color: #FFF799">148437.68 KB</td>
+<td style="background-color: #FFCF99">101562.73 KB</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr>
+<th>Method</th><th>Length</th><th>Sorted</th><th>Int32</th><th>String</th><th>StructInts</th><th>ClassInts</th><th>RecordStructInts</th><th>RecordClassInts</th><th>StructStrings</th><th>ClassStrings</th><th>RecordStructStrings</th><th>RecordClassStrings</th></tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left">ImmutableArray</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99"><strong>3906.32 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>11718.88 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.58 KB</strong></td>
+<td style="background-color: #99FF99"><strong>11718.89 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.58 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.6 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.6 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">Array</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99"><strong>3906.32 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>11718.88 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.58 KB</strong></td>
+<td style="background-color: #99FF99"><strong>11718.89 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.58 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.6 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+<td style="background-color: #99FF99"><strong>23437.6 KB</strong></td>
+<td style="background-color: #99FF99"><strong>7812.54 KB</strong></td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyCollection</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">3906.34 KB</td>
+<td style="background-color: #99FF99">7813.17 KB</td>
+<td style="background-color: #99FF99">11718.91 KB</td>
+<td style="background-color: #99FF99">7813.23 KB</td>
+<td style="background-color: #99FF99">11718.91 KB</td>
+<td style="background-color: #99FF99">7813.23 KB</td>
+<td style="background-color: #99FF99">23437.62 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+<td style="background-color: #99FF99">23437.62 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">3906.35 KB</td>
+<td style="background-color: #99FF99">7813.17 KB</td>
+<td style="background-color: #99FF99">11718.92 KB</td>
+<td style="background-color: #99FF99">7813.24 KB</td>
+<td style="background-color: #99FF99">11718.92 KB</td>
+<td style="background-color: #99FF99">7813.24 KB</td>
+<td style="background-color: #99FF99">23437.63 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+<td style="background-color: #99FF99">23437.63 KB</td>
+<td style="background-color: #99FF99">7812.57 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableArray (Sorted)</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">3906.4 KB</td>
+<td style="background-color: #99FF99">7812.62 KB</td>
+<td style="background-color: #99FF99">11718.9 KB</td>
+<td style="background-color: #99FF99">7812.59 KB</td>
+<td style="background-color: #99FF99">11718.9 KB</td>
+<td style="background-color: #99FF99"><strong>7812.58 KB</strong></td>
+<td style="background-color: #99FF99">23437.62 KB</td>
+<td style="background-color: #99FF99">7812.62 KB</td>
+<td style="background-color: #99FF99">23437.62 KB</td>
+<td style="background-color: #99FF99">7812.65 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">Array (Sorted)</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">3906.4 KB</td>
+<td style="background-color: #99FF99">7812.91 KB</td>
+<td style="background-color: #99FF99">11718.9 KB</td>
+<td style="background-color: #99FF99">7812.66 KB</td>
+<td style="background-color: #99FF99">11718.9 KB</td>
+<td style="background-color: #99FF99">7812.66 KB</td>
+<td style="background-color: #99FF99">23437.91 KB</td>
+<td style="background-color: #99FF99">7812.91 KB</td>
+<td style="background-color: #99FF99">23437.91 KB</td>
+<td style="background-color: #99FF99">7812.91 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">List (Sorted)</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #99FF99">3906.43 KB</td>
+<td style="background-color: #99FF99">7812.66 KB</td>
+<td style="background-color: #99FF99">11718.93 KB</td>
+<td style="background-color: #99FF99">7812.69 KB</td>
+<td style="background-color: #99FF99">11718.93 KB</td>
+<td style="background-color: #99FF99">7812.67 KB</td>
+<td style="background-color: #99FF99">23437.95 KB</td>
+<td style="background-color: #99FF99">7812.95 KB</td>
+<td style="background-color: #99FF99">23437.95 KB</td>
+<td style="background-color: #99FF99">7812.95 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">HashSet</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #CDFF99">18169.71 KB</td>
+<td style="background-color: #C9FF99">22711.04 KB</td>
+<td style="background-color: #EBFF99">58516.56 KB</td>
+<td style="background-color: #C9FF99">22711.04 KB</td>
+<td style="background-color: #BBFF99">27251.66 KB</td>
+<td style="background-color: #C9FF99">22711.04 KB</td>
+<td style="background-color: #E7FF99">79955.34 KB</td>
+<td style="background-color: #C9FF99">22709 KB</td>
+<td style="background-color: #B7FF99">40875.99 KB</td>
+<td style="background-color: #C9FF99">22709 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">Dictionary</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #DAFF99">22709.02 KB</td>
+<td style="background-color: #DFFF99">31792.56 KB</td>
+<td style="background-color: #EFFF99">63058.48 KB</td>
+<td style="background-color: #DFFF99">31792.49 KB</td>
+<td style="background-color: #C4FF99">31792.5 KB</td>
+<td style="background-color: #DFFF99">31792.55 KB</td>
+<td style="background-color: #EFFF99">89039.55 KB</td>
+<td style="background-color: #DFFF99">31792.48 KB</td>
+<td style="background-color: #C4FF99">49959.53 KB</td>
+<td style="background-color: #DFFF99">31792.48 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ReadOnlyDictionary</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #DAFF99">22709.06 KB</td>
+<td style="background-color: #DFFF99">31792.6 KB</td>
+<td style="background-color: #EFFF99">63059.83 KB</td>
+<td style="background-color: #DFFF99">31792.59 KB</td>
+<td style="background-color: #C4FF99">31792.54 KB</td>
+<td style="background-color: #DFFF99">31792.59 KB</td>
+<td style="background-color: #EFFF99">89040.11 KB</td>
+<td style="background-color: #DFFF99">31792.52 KB</td>
+<td style="background-color: #C4FF99">49959.57 KB</td>
+<td style="background-color: #DFFF99">31792.52 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedList</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #E6FF99">27591.97 KB</td>
+<td style="background-color: #EFFF99">40590.23 KB</td>
+<td style="background-color: #F9FF99">75753.15 KB</td>
+<td style="background-color: #EFFF99">40585.89 KB</td>
+<td style="background-color: #D9FF99">44487.96 KB</td>
+<td style="background-color: #EFFF99">40585.89 KB</td>
+<td style="background-color: #FCFF99">113455.11 KB</td>
+<td style="background-color: #EFFF99">40581.96 KB</td>
+<td style="background-color: #E2FF99">74373.95 KB</td>
+<td style="background-color: #EFFF99">40581.96 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedSet</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FCFF99">42969.5 KB</td>
+<td style="background-color: #FDFF99">54687.96 KB</td>
+<td style="background-color: #EBFF99">58594.55 KB</td>
+<td style="background-color: #FDFF99">54690.08 KB</td>
+<td style="background-color: #EBFF99">58594.55 KB</td>
+<td style="background-color: #FDFF99">54690.08 KB</td>
+<td style="background-color: #ECFF99">85937.68 KB</td>
+<td style="background-color: #FDFF99">54687.96 KB</td>
+<td style="background-color: #ECFF99">85937.96 KB</td>
+<td style="background-color: #FDFF99">54687.96 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenSet</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FDFF99">44677.28 KB</td>
+<td style="background-color: #FFC899">105720.5 KB</td>
+<td style="background-color: #FFCD99">157881.09 KB</td>
+<td style="background-color: #FFE999">83011.55 KB</td>
+<td style="background-color: #FFFF99">95365.64 KB</td>
+<td style="background-color: #FFE999">83011.55 KB</td>
+<td style="background-color: #FFD099">210569.13 KB</td>
+<td style="background-color: #FFE999">83011.61 KB</td>
+<td style="background-color: #FFFF99">132428.59 KB</td>
+<td style="background-color: #FFE999">83011.61 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FEFF99">46875.67 KB</td>
+<td style="background-color: #F7FF99">46875.35 KB</td>
+<td style="background-color: #E7FF99">54688.21 KB</td>
+<td style="background-color: #F7FF99">46875.36 KB</td>
+<td style="background-color: #E7FF99">54688.21 KB</td>
+<td style="background-color: #F7FF99">46875.41 KB</td>
+<td style="background-color: #D5FF99">62500.24 KB</td>
+<td style="background-color: #F7FF99">46875.14 KB</td>
+<td style="background-color: #D5FF99">62500.24 KB</td>
+<td style="background-color: #F7FF99">46875.1 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">LinkedList</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FEFF99">46875.8 KB</td>
+<td style="background-color: #F7FF99">46875.43 KB</td>
+<td style="background-color: #E7FF99">54688.34 KB</td>
+<td style="background-color: #F7FF99">46875.48 KB</td>
+<td style="background-color: #E7FF99">54688.35 KB</td>
+<td style="background-color: #F7FF99">46875.5 KB</td>
+<td style="background-color: #D5FF99">62500.32 KB</td>
+<td style="background-color: #F7FF99">46875.22 KB</td>
+<td style="background-color: #D5FF99">62500.31 KB</td>
+<td style="background-color: #F7FF99">46875.22 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedSet</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFF99">50781.94 KB</td>
+<td style="background-color: #FDFF99">54687.72 KB</td>
+<td style="background-color: #F3FF99">66407.01 KB</td>
+<td style="background-color: #FDFF99">54687.97 KB</td>
+<td style="background-color: #F3FF99">66407 KB</td>
+<td style="background-color: #FDFF99">54688.15 KB</td>
+<td style="background-color: #ECFF99">85937.72 KB</td>
+<td style="background-color: #FDFF99">54688 KB</td>
+<td style="background-color: #ECFF99">85938 KB</td>
+<td style="background-color: #FDFF99">54688 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableDictionary</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFB99">54688.41 KB</td>
+<td style="background-color: #FFFF99">62507.51 KB</td>
+<td style="background-color: #FFFF99">93779.72 KB</td>
+<td style="background-color: #FFFF99">62507.74 KB</td>
+<td style="background-color: #EFFF99">62507.17 KB</td>
+<td style="background-color: #FFFF99">62511.77 KB</td>
+<td style="background-color: #FDFF99">117220.78 KB</td>
+<td style="background-color: #FFFF99">62508.29 KB</td>
+<td style="background-color: #E5FF99">78133.12 KB</td>
+<td style="background-color: #FFFF99">62507.52 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableHashSet</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFFB99">54689.05 KB</td>
+<td style="background-color: #FDFF99">54692.52 KB</td>
+<td style="background-color: #FFFF99">93801.93 KB</td>
+<td style="background-color: #FDFF99">54700.17 KB</td>
+<td style="background-color: #EFFF99">62514.63 KB</td>
+<td style="background-color: #FDFF99">54695.41 KB</td>
+<td style="background-color: #FAFF99">109421.66 KB</td>
+<td style="background-color: #FDFF99">54693.31 KB</td>
+<td style="background-color: #DDFF99">70318.62 KB</td>
+<td style="background-color: #FDFF99">54693.17 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">FrozenDictionary</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFF799">58008.48 KB</td>
+<td style="background-color: #FFA299">116757.2 KB</td>
+<td style="background-color: #FFC099">167306.32 KB</td>
+<td style="background-color: #FFD199">100884.43 KB</td>
+<td style="background-color: #FFF999">104790.37 KB</td>
+<td style="background-color: #FFD199">100884.43 KB</td>
+<td style="background-color: #FFBD99">228444.45 KB</td>
+<td style="background-color: #FFD199">100884.17 KB</td>
+<td style="background-color: #FFF799">150301.16 KB</td>
+<td style="background-color: #FFD199">100884.17 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">SortedDictionary</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFE899">69585.11 KB</td>
+<td style="background-color: #FFE599">86480.08 KB</td>
+<td style="background-color: #FFF199">117746.1 KB</td>
+<td style="background-color: #FFE599">86485.45 KB</td>
+<td style="background-color: #FDFF99">86480.75 KB</td>
+<td style="background-color: #FFE599">86480.81 KB</td>
+<td style="background-color: #FFF299">159352.07 KB</td>
+<td style="background-color: #FFE599">86480.13 KB</td>
+<td style="background-color: #FDFF99">120272.13 KB</td>
+<td style="background-color: #FFE599">86480.41 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableSortedDictionary</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FFB699">93751.88 KB</td>
+<td style="background-color: #FF9999">117188.78 KB</td>
+<td style="background-color: #FF9999">179627.3 KB</td>
+<td style="background-color: #FF9999">117195.74 KB</td>
+<td style="background-color: #FF9999">179627.27 KB</td>
+<td style="background-color: #FF9999">117188.76 KB</td>
+<td style="background-color: #FF9999">242110.38 KB</td>
+<td style="background-color: #FF9999">117188.41 KB</td>
+<td style="background-color: #FF9999">242110.66 KB</td>
+<td style="background-color: #FF9999">117188.41 KB</td>
+</tr>
+<tr>
+<td style="text-align: left">ImmutableList (Sorted)</td>
+<td style="background-color: #CCFFFF">1000000</td>
+<td style="text-align: left;background-color: #CCFFFF">True</td>
+<td style="background-color: #FF9999">97657.34 KB</td>
+<td style="background-color: #FFCF99">101563.08 KB</td>
+<td style="background-color: #FFEE99">121094.81 KB</td>
+<td style="background-color: #FFCF99">101563.06 KB</td>
+<td style="background-color: #FFEE99">121094.82 KB</td>
+<td style="background-color: #FFCF99">101563.34 KB</td>
+<td style="background-color: #FFF799">148438.01 KB</td>
+<td style="background-color: #FFCF99">101563.01 KB</td>
+<td style="background-color: #FFF799">148438.01 KB</td>
+<td style="background-color: #FFCF99">101563.01 KB</td>
+</tr>
+</tbody>
+</table>
+<div class="powered-by">Powered by <a href="https://github.com/mjebrahimi/BenchmarkDotNetVisualizer">https://github.com/mjebrahimi/BenchmarkDotNetVisualizer</a></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/colreorder/1.5.4/js/dataTables.colReorder.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+</body>
+<script>
+    $(document).ready( function () {
+        DataTable.ext.type.order['custom-orderer-pre'] = function (d) {
+            d = d.replace(/(<([^>]+)>)/gi, ""); //remove html tags
+            if (!d.match(/^\d/)) //if not started with number
+                return d;
+            var regex = /[\d,]+(?:\.\d+)?/;
+            var number = d.match(regex)[0].replace(/,/g, ""); //extract number
+            return parseFloat(number); //Number
+        };
+        $('table').DataTable({
+            info: false,
+            paging: false,
+            colReorder: true,
+            order: [], //remove default order
+            columnDefs: [
+                {
+                    type: 'custom-orderer',
+                    targets: '_all'
+                }
+            ],
+            dom: 'Bfrtip',
+            buttons: ['colvis']
+        });
+    });
+</script>
+</html>

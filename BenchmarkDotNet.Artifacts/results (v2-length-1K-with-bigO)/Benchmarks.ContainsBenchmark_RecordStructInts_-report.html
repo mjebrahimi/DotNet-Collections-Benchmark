@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmarks.ContainsBenchmark_RecordStructInts_-20240115-021609</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]   : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                            </th><th>Categories</th><th>DataType  </th><th>Length</th><th>Existed</th><th>Mean</th><th>Error</th><th>StdDev</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>FrozenSet</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>2.595 ns</td><td>0.2810 ns</td><td>0.0154 ns</td><td>-</td>
+</tr><tr><td>FrozenDictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>2.598 ns</td><td>0.3018 ns</td><td>0.0165 ns</td><td>-</td>
+</tr><tr><td>Dictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>4.380 ns</td><td>0.2512 ns</td><td>0.0138 ns</td><td>-</td>
+</tr><tr><td>HashSet</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>4.425 ns</td><td>0.1250 ns</td><td>0.0069 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>4.576 ns</td><td>0.2102 ns</td><td>0.0115 ns</td><td>-</td>
+</tr><tr><td>ImmutableDictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>7.573 ns</td><td>1.0966 ns</td><td>0.0601 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>7.642 ns</td><td>1.5060 ns</td><td>0.0826 ns</td><td>-</td>
+</tr><tr><td>FrozenSet</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>3.618 ns</td><td>0.3391 ns</td><td>0.0186 ns</td><td>-</td>
+</tr><tr><td>FrozenDictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>3.785 ns</td><td>0.8025 ns</td><td>0.0440 ns</td><td>-</td>
+</tr><tr><td>HashSet</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>4.911 ns</td><td>1.7936 ns</td><td>0.0983 ns</td><td>-</td>
+</tr><tr><td>Dictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>4.986 ns</td><td>0.1465 ns</td><td>0.0080 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>5.399 ns</td><td>0.4077 ns</td><td>0.0223 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>7.693 ns</td><td>2.5277 ns</td><td>0.1386 ns</td><td>-</td>
+</tr><tr><td>ImmutableDictionary</td><td>O(1)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>7.904 ns</td><td>1.8532 ns</td><td>0.1016 ns</td><td>-</td>
+</tr><tr><td>SortedSet</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>13.978 ns</td><td>0.7222 ns</td><td>0.0396 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>18.674 ns</td><td>1.9552 ns</td><td>0.1072 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>18.848 ns</td><td>1.2010 ns</td><td>0.0658 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>19.021 ns</td><td>2.6577 ns</td><td>0.1457 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>23.771 ns</td><td>8.3139 ns</td><td>0.4557 ns</td><td>32 B</td>
+</tr><tr><td>SortedDictionary</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>24.974 ns</td><td>2.8214 ns</td><td>0.1547 ns</td><td>32 B</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>31.460 ns</td><td>3.6933 ns</td><td>0.2024 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>36.904 ns</td><td>6.3120 ns</td><td>0.3460 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedSet</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>37.512 ns</td><td>9.0715 ns</td><td>0.4972 ns</td><td>-</td>
+</tr><tr><td>SortedSet</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>17.640 ns</td><td>4.1919 ns</td><td>0.2298 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>20.606 ns</td><td>2.4490 ns</td><td>0.1342 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>20.637 ns</td><td>2.3828 ns</td><td>0.1306 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>20.843 ns</td><td>1.4851 ns</td><td>0.0814 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>26.691 ns</td><td>8.7106 ns</td><td>0.4775 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>27.080 ns</td><td>7.2256 ns</td><td>0.3961 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>27.141 ns</td><td>3.5392 ns</td><td>0.1940 ns</td><td>-</td>
+</tr><tr><td>SortedDictionary</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>27.407 ns</td><td>7.4406 ns</td><td>0.4078 ns</td><td>32 B</td>
+</tr><tr><td>ImmutableSortedSet</td><td>O(log(N))</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>29.574 ns</td><td>3.2711 ns</td><td>0.1793 ns</td><td>-</td>
+</tr><tr><td>Array</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>484.841 ns</td><td>51.5342 ns</td><td>2.8248 ns</td><td>-</td>
+</tr><tr><td>ImmutableArray</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>493.708 ns</td><td>63.8378 ns</td><td>3.4992 ns</td><td>-</td>
+</tr><tr><td>List</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>495.131 ns</td><td>161.4268 ns</td><td>8.8483 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyCollection</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>False</td><td>512.845 ns</td><td>119.1040 ns</td><td>6.5285 ns</td><td>-</td>
+</tr><tr><td>List</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>252.419 ns</td><td>24.8989 ns</td><td>1.3648 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyCollection</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>253.197 ns</td><td>21.8176 ns</td><td>1.1959 ns</td><td>-</td>
+</tr><tr><td>Array</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>255.642 ns</td><td>34.3234 ns</td><td>1.8814 ns</td><td>-</td>
+</tr><tr><td>ImmutableArray</td><td>O(N)</td><td>RecordStructInts</td><td>1000</td><td>True</td><td>257.205 ns</td><td>12.2996 ns</td><td>0.6742 ns</td><td>-</td>
+</tr></tbody></table>
+</body>
+</html>

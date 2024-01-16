@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmarks.ContainsBenchmark_String_-20240115-015156</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.12, Windows 11 (10.0.22631.3007/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.101
+  [Host]   : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.1 (8.0.123.58001), X64 RyuJIT AVX2
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                            </th><th>Categories</th><th>DataType</th><th>Length</th><th>Existed</th><th>Mean  </th><th>Error</th><th>StdDev</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>FrozenSet</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>4.308 ns</td><td>0.0803 ns</td><td>0.0044 ns</td><td>-</td>
+</tr><tr><td>FrozenDictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>4.405 ns</td><td>0.4932 ns</td><td>0.0270 ns</td><td>-</td>
+</tr><tr><td>HashSet</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>6.841 ns</td><td>1.0581 ns</td><td>0.0580 ns</td><td>-</td>
+</tr><tr><td>Dictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>7.015 ns</td><td>1.8951 ns</td><td>0.1039 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>8.961 ns</td><td>2.6484 ns</td><td>0.1452 ns</td><td>-</td>
+</tr><tr><td>ImmutableDictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>16.405 ns</td><td>2.8413 ns</td><td>0.1557 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>O(1)</td><td>String</td><td>1000</td><td>False</td><td>26.570 ns</td><td>3.4740 ns</td><td>0.1904 ns</td><td>-</td>
+</tr><tr><td>FrozenSet</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>4.452 ns</td><td>0.1191 ns</td><td>0.0065 ns</td><td>-</td>
+</tr><tr><td>FrozenDictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>4.987 ns</td><td>0.4987 ns</td><td>0.0273 ns</td><td>-</td>
+</tr><tr><td>HashSet</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>8.720 ns</td><td>0.2512 ns</td><td>0.0138 ns</td><td>-</td>
+</tr><tr><td>Dictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>8.825 ns</td><td>1.4643 ns</td><td>0.0803 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>11.300 ns</td><td>2.2122 ns</td><td>0.1213 ns</td><td>-</td>
+</tr><tr><td>ImmutableDictionary</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>21.104 ns</td><td>2.9163 ns</td><td>0.1599 ns</td><td>-</td>
+</tr><tr><td>ImmutableHashSet</td><td>O(1)</td><td>String</td><td>1000</td><td>True</td><td>28.374 ns</td><td>1.4515 ns</td><td>0.0796 ns</td><td>-</td>
+</tr><tr><td>SortedSet</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>307.629 ns</td><td>40.8524 ns</td><td>2.2393 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>312.884 ns</td><td>14.2113 ns</td><td>0.7790 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>313.269 ns</td><td>57.7894 ns</td><td>3.1676 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>314.854 ns</td><td>105.9571 ns</td><td>5.8079 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>322.710 ns</td><td>107.3378 ns</td><td>5.8835 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedSet</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>323.908 ns</td><td>61.6276 ns</td><td>3.3780 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>330.652 ns</td><td>116.2749 ns</td><td>6.3734 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>356.776 ns</td><td>58.3859 ns</td><td>3.2003 ns</td><td>-</td>
+</tr><tr><td>SortedDictionary</td><td>O(log(N))</td><td>String</td><td>1000</td><td>False</td><td>361.296 ns</td><td>118.4797 ns</td><td>6.4943 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>241.350 ns</td><td>79.5247 ns</td><td>4.3590 ns</td><td>-</td>
+</tr><tr><td>ImmutableSortedSet</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>248.392 ns</td><td>79.2214 ns</td><td>4.3424 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableList (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>264.561 ns</td><td>56.0615 ns</td><td>3.0729 ns</td><td>-</td>
+</tr><tr><td>&#39;List (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>266.752 ns</td><td>27.9816 ns</td><td>1.5338 ns</td><td>-</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>267.570 ns</td><td>31.6018 ns</td><td>1.7322 ns</td><td>-</td>
+</tr><tr><td>&#39;Array (Sorted + BinarySearch)&#39;</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>268.204 ns</td><td>102.9788 ns</td><td>5.6446 ns</td><td>-</td>
+</tr><tr><td>SortedList</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>271.979 ns</td><td>22.9028 ns</td><td>1.2554 ns</td><td>-</td>
+</tr><tr><td>SortedSet</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>272.019 ns</td><td>76.0691 ns</td><td>4.1696 ns</td><td>-</td>
+</tr><tr><td>SortedDictionary</td><td>O(log(N))</td><td>String</td><td>1000</td><td>True</td><td>280.641 ns</td><td>10.9002 ns</td><td>0.5975 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyCollection</td><td>O(N)</td><td>String</td><td>1000</td><td>False</td><td>2,851.432 ns</td><td>683.4577 ns</td><td>37.4626 ns</td><td>-</td>
+</tr><tr><td>List</td><td>O(N)</td><td>String</td><td>1000</td><td>False</td><td>3,747.693 ns</td><td>485.0937 ns</td><td>26.5896 ns</td><td>-</td>
+</tr><tr><td>ImmutableArray</td><td>O(N)</td><td>String</td><td>1000</td><td>False</td><td>4,042.309 ns</td><td>569.2436 ns</td><td>31.2022 ns</td><td>-</td>
+</tr><tr><td>Array</td><td>O(N)</td><td>String</td><td>1000</td><td>False</td><td>4,171.897 ns</td><td>475.1176 ns</td><td>26.0428 ns</td><td>-</td>
+</tr><tr><td>ReadOnlyCollection</td><td>O(N)</td><td>String</td><td>1000</td><td>True</td><td>1,392.430 ns</td><td>60.8564 ns</td><td>3.3357 ns</td><td>-</td>
+</tr><tr><td>List</td><td>O(N)</td><td>String</td><td>1000</td><td>True</td><td>1,836.948 ns</td><td>69.8249 ns</td><td>3.8273 ns</td><td>-</td>
+</tr><tr><td>Array</td><td>O(N)</td><td>String</td><td>1000</td><td>True</td><td>1,838.527 ns</td><td>646.2116 ns</td><td>35.4210 ns</td><td>-</td>
+</tr><tr><td>ImmutableArray</td><td>O(N)</td><td>String</td><td>1000</td><td>True</td><td>1,869.762 ns</td><td>776.7829 ns</td><td>42.5781 ns</td><td>-</td>
+</tr></tbody></table>
+</body>
+</html>

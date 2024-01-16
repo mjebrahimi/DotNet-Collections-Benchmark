@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>Benchmarks.InitializeBenchmark_RecordStructStrings_-20231228-145400</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.13.11, Windows 11 (10.0.22631.2861/23H2/2023Update/SunValley3)
+AMD Ryzen 7 5800H with Radeon Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 8.0.100
+  [Host]   : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+  ShortRun : .NET 8.0.0 (8.0.23.53103), X64 RyuJIT AVX2
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method             </th><th>DataType     </th><th>Length</th><th>Sorted</th><th>Mean    </th><th>Error  </th><th>StdDev</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>Array</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>109.1 &mu;s</td><td>9.29 &mu;s</td><td>0.51 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>109.8 &mu;s</td><td>9.23 &mu;s</td><td>0.51 &mu;s</td><td>234.45 KB</td>
+</tr><tr><td>ImmutableArray</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>111.2 &mu;s</td><td>11.88 &mu;s</td><td>0.65 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>List</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>111.2 &mu;s</td><td>10.19 &mu;s</td><td>0.56 &mu;s</td><td>234.45 KB</td>
+</tr><tr><td>LinkedList</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>157.4 &mu;s</td><td>28.76 &mu;s</td><td>1.58 &mu;s</td><td>625.07 KB</td>
+</tr><tr><td>ImmutableList</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>210.7 &mu;s</td><td>13.17 &mu;s</td><td>0.72 &mu;s</td><td>625.05 KB</td>
+</tr><tr><td>HashSet</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>598.2 &mu;s</td><td>323.13 &mu;s</td><td>17.71 &mu;s</td><td>355.36 KB</td>
+</tr><tr><td>Dictionary</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>638.9 &mu;s</td><td>274.32 &mu;s</td><td>15.04 &mu;s</td><td>434.28 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>674.7 &mu;s</td><td>618.83 &mu;s</td><td>33.92 &mu;s</td><td>434.32 KB</td>
+</tr><tr><td>FrozenSet</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>1,231.4 &mu;s</td><td>103.98 &mu;s</td><td>5.70 &mu;s</td><td>1219.54 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>1,257.2 &mu;s</td><td>168.31 &mu;s</td><td>9.23 &mu;s</td><td>1387.48 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>2,697.5 &mu;s</td><td>643.19 &mu;s</td><td>35.26 &mu;s</td><td>703.21 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>2,891.3 &mu;s</td><td>104.80 &mu;s</td><td>5.74 &mu;s</td><td>781.46 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>5,895.5 &mu;s</td><td>561.16 &mu;s</td><td>30.76 &mu;s</td><td>234.46 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>5,979.4 &mu;s</td><td>170.51 &mu;s</td><td>9.35 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>6,083.9 &mu;s</td><td>884.51 &mu;s</td><td>48.48 &mu;s</td><td>468.85 KB</td>
+</tr><tr><td>SortedDictionary</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>6,330.0 &mu;s</td><td>886.22 &mu;s</td><td>48.58 &mu;s</td><td>1137.59 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>6,563.3 &mu;s</td><td>678.13 &mu;s</td><td>37.17 &mu;s</td><td>859.51 KB</td>
+</tr><tr><td>SortedSet</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>6,691.2 &mu;s</td><td>249.05 &mu;s</td><td>13.65 &mu;s</td><td>859.47 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>6,701.1 &mu;s</td><td>766.20 &mu;s</td><td>42.00 &mu;s</td><td>1484.52 KB</td>
+</tr><tr><td>SortedList</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>7,527.8 &mu;s</td><td>1,170.89 &mu;s</td><td>64.18 &mu;s</td><td>678.61 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>RecordStructStrings</td><td>10000</td><td>False</td><td>11,672.2 &mu;s</td><td>2,411.24 &mu;s</td><td>132.17 &mu;s</td><td>2422.64 KB</td>
+</tr><tr><td>ImmutableArray</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>108.5 &mu;s</td><td>12.00 &mu;s</td><td>0.66 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>Array</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>109.4 &mu;s</td><td>4.35 &mu;s</td><td>0.24 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>110.5 &mu;s</td><td>7.56 &mu;s</td><td>0.41 &mu;s</td><td>234.45 KB</td>
+</tr><tr><td>List</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>111.0 &mu;s</td><td>15.99 &mu;s</td><td>0.88 &mu;s</td><td>234.45 KB</td>
+</tr><tr><td>LinkedList</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>155.6 &mu;s</td><td>71.16 &mu;s</td><td>3.90 &mu;s</td><td>625.07 KB</td>
+</tr><tr><td>ImmutableList</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>210.5 &mu;s</td><td>15.18 &mu;s</td><td>0.83 &mu;s</td><td>625.05 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>558.7 &mu;s</td><td>46.04 &mu;s</td><td>2.52 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>HashSet</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>698.1 &mu;s</td><td>192.64 &mu;s</td><td>10.56 &mu;s</td><td>355.36 KB</td>
+</tr><tr><td>Dictionary</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>782.3 &mu;s</td><td>46.56 &mu;s</td><td>2.55 &mu;s</td><td>434.28 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>787.1 &mu;s</td><td>192.41 &mu;s</td><td>10.55 &mu;s</td><td>434.32 KB</td>
+</tr><tr><td>FrozenSet</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>1,470.0 &mu;s</td><td>72.77 &mu;s</td><td>3.99 &mu;s</td><td>1219.77 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>1,511.2 &mu;s</td><td>109.91 &mu;s</td><td>6.02 &mu;s</td><td>1385.44 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>2,820.3 &mu;s</td><td>127.65 &mu;s</td><td>7.00 &mu;s</td><td>703.21 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>3,143.3 &mu;s</td><td>391.13 &mu;s</td><td>21.44 &mu;s</td><td>781.46 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>3,723.7 &mu;s</td><td>415.31 &mu;s</td><td>22.76 &mu;s</td><td>234.42 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>3,816.7 &mu;s</td><td>52.21 &mu;s</td><td>2.86 &mu;s</td><td>234.45 KB</td>
+</tr><tr><td>SortedSet</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>4,368.5 &mu;s</td><td>176.10 &mu;s</td><td>9.65 &mu;s</td><td>859.47 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>4,477.8 &mu;s</td><td>459.51 &mu;s</td><td>25.19 &mu;s</td><td>859.51 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>4,512.7 &mu;s</td><td>509.85 &mu;s</td><td>27.95 &mu;s</td><td>1484.52 KB</td>
+</tr><tr><td>SortedList</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>5,151.8 &mu;s</td><td>884.04 &mu;s</td><td>48.46 &mu;s</td><td>678.61 KB</td>
+</tr><tr><td>SortedDictionary</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>7,489.4 &mu;s</td><td>582.00 &mu;s</td><td>31.90 &mu;s</td><td>1137.59 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>RecordStructStrings</td><td>10000</td><td>True</td><td>13,689.5 &mu;s</td><td>3,153.91 &mu;s</td><td>172.88 &mu;s</td><td>2422.64 KB</td>
+</tr><tr><td>List</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>9,259.2 &mu;s</td><td>1,292.89 &mu;s</td><td>70.87 &mu;s</td><td>23437.62 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>9,307.7 &mu;s</td><td>979.57 &mu;s</td><td>53.69 &mu;s</td><td>23437.61 KB</td>
+</tr><tr><td>ImmutableArray</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>9,444.1 &mu;s</td><td>566.46 &mu;s</td><td>31.05 &mu;s</td><td>23437.59 KB</td>
+</tr><tr><td>Array</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>9,510.5 &mu;s</td><td>611.69 &mu;s</td><td>33.53 &mu;s</td><td>23437.59 KB</td>
+</tr><tr><td>ImmutableList</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>82,798.1 &mu;s</td><td>10,955.30 &mu;s</td><td>600.50 &mu;s</td><td>62500.23 KB</td>
+</tr><tr><td>LinkedList</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>82,806.8 &mu;s</td><td>45,501.07 &mu;s</td><td>2,494.07 &mu;s</td><td>62500.26 KB</td>
+</tr><tr><td>HashSet</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>125,852.4 &mu;s</td><td>18,131.15 &mu;s</td><td>993.83 &mu;s</td><td>40876.04 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>131,012.5 &mu;s</td><td>13,871.31 &mu;s</td><td>760.33 &mu;s</td><td>49959.55 KB</td>
+</tr><tr><td>Dictionary</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>134,952.6 &mu;s</td><td>44,339.87 &mu;s</td><td>2,430.42 &mu;s</td><td>49959.52 KB</td>
+</tr><tr><td>FrozenSet</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>274,479.2 &mu;s</td><td>79,764.26 &mu;s</td><td>4,372.15 &mu;s</td><td>132428.42 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>283,767.8 &mu;s</td><td>75,920.75 &mu;s</td><td>4,161.47 &mu;s</td><td>150301.13 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,145,315.5 &mu;s</td><td>328,191.79 &mu;s</td><td>17,989.30 &mu;s</td><td>70321.09 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,227,295.7 &mu;s</td><td>234,140.70 &mu;s</td><td>12,834.04 &mu;s</td><td>78133.21 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,507,109.5 &mu;s</td><td>42,355.67 &mu;s</td><td>2,321.66 &mu;s</td><td>23437.91 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,508,957.0 &mu;s</td><td>154,047.80 &mu;s</td><td>8,443.88 &mu;s</td><td>46875.44 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,551,474.3 &mu;s</td><td>729,010.11 &mu;s</td><td>39,959.50 &mu;s</td><td>23437.95 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,657,942.0 &mu;s</td><td>159,922.62 &mu;s</td><td>8,765.90 &mu;s</td><td>148437.68 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,706,557.2 &mu;s</td><td>230,089.73 &mu;s</td><td>12,611.99 &mu;s</td><td>85938 KB</td>
+</tr><tr><td>SortedSet</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,724,518.4 &mu;s</td><td>163,221.95 &mu;s</td><td>8,946.75 &mu;s</td><td>85937.68 KB</td>
+</tr><tr><td>SortedList</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>1,826,587.8 &mu;s</td><td>540,373.79 &mu;s</td><td>29,619.71 &mu;s</td><td>74373.95 KB</td>
+</tr><tr><td>SortedDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>2,305,865.1 &mu;s</td><td>365,597.05 &mu;s</td><td>20,039.61 &mu;s</td><td>120272.13 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>False</td><td>4,077,824.1 &mu;s</td><td>463,964.17 &mu;s</td><td>25,431.44 &mu;s</td><td>242110.66 KB</td>
+</tr><tr><td>Array</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>16,592.8 &mu;s</td><td>1,023.57 &mu;s</td><td>56.11 &mu;s</td><td>23437.6 KB</td>
+</tr><tr><td>ImmutableArray</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>16,688.3 &mu;s</td><td>3,034.81 &mu;s</td><td>166.35 &mu;s</td><td>23437.6 KB</td>
+</tr><tr><td>List</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>16,801.9 &mu;s</td><td>1,826.15 &mu;s</td><td>100.10 &mu;s</td><td>23437.63 KB</td>
+</tr><tr><td>ReadOnlyCollection</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>16,802.8 &mu;s</td><td>1,938.50 &mu;s</td><td>106.26 &mu;s</td><td>23437.62 KB</td>
+</tr><tr><td>ImmutableList</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>98,327.3 &mu;s</td><td>13,109.25 &mu;s</td><td>718.56 &mu;s</td><td>62500.24 KB</td>
+</tr><tr><td>LinkedList</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>104,024.1 &mu;s</td><td>46,652.31 &mu;s</td><td>2,557.17 &mu;s</td><td>62500.31 KB</td>
+</tr><tr><td>&#39;ImmutableArray (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>156,884.1 &mu;s</td><td>13,461.55 &mu;s</td><td>737.87 &mu;s</td><td>23437.62 KB</td>
+</tr><tr><td>HashSet</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>190,732.3 &mu;s</td><td>41,452.44 &mu;s</td><td>2,272.15 &mu;s</td><td>40875.99 KB</td>
+</tr><tr><td>ReadOnlyDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>269,814.9 &mu;s</td><td>31,711.56 &mu;s</td><td>1,738.22 &mu;s</td><td>49959.57 KB</td>
+</tr><tr><td>Dictionary</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>281,131.2 &mu;s</td><td>119,976.50 &mu;s</td><td>6,576.32 &mu;s</td><td>49959.53 KB</td>
+</tr><tr><td>FrozenSet</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>435,732.6 &mu;s</td><td>128,467.27 &mu;s</td><td>7,041.72 &mu;s</td><td>132428.59 KB</td>
+</tr><tr><td>FrozenDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>519,579.4 &mu;s</td><td>219,505.30 &mu;s</td><td>12,031.83 &mu;s</td><td>150301.16 KB</td>
+</tr><tr><td>&#39;List (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,227,750.5 &mu;s</td><td>10,215.12 &mu;s</td><td>559.93 &mu;s</td><td>23437.95 KB</td>
+</tr><tr><td>&#39;Array (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,239,819.4 &mu;s</td><td>269,185.78 &mu;s</td><td>14,754.98 &mu;s</td><td>23437.91 KB</td>
+</tr><tr><td>ImmutableHashSet</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,263,848.3 &mu;s</td><td>171,521.93 &mu;s</td><td>9,401.70 &mu;s</td><td>70318.62 KB</td>
+</tr><tr><td>ImmutableDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,360,223.1 &mu;s</td><td>145,305.83 &mu;s</td><td>7,964.70 &mu;s</td><td>78133.12 KB</td>
+</tr><tr><td>&#39;ImmutableList (Sorted)&#39;</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,381,403.5 &mu;s</td><td>143,336.52 &mu;s</td><td>7,856.76 &mu;s</td><td>148438.01 KB</td>
+</tr><tr><td>SortedSet</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,414,749.6 &mu;s</td><td>111,430.07 &mu;s</td><td>6,107.86 &mu;s</td><td>85937.96 KB</td>
+</tr><tr><td>ImmutableSortedSet</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,453,673.0 &mu;s</td><td>124,924.82 &mu;s</td><td>6,847.55 &mu;s</td><td>85938 KB</td>
+</tr><tr><td>SortedDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,476,652.0 &mu;s</td><td>50,142.82 &mu;s</td><td>2,748.50 &mu;s</td><td>120272.13 KB</td>
+</tr><tr><td>SortedList</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>1,655,944.9 &mu;s</td><td>216,528.62 &mu;s</td><td>11,868.66 &mu;s</td><td>74373.95 KB</td>
+</tr><tr><td>ImmutableSortedDictionary</td><td>RecordStructStrings</td><td>1000000</td><td>True</td><td>2,537,376.7 &mu;s</td><td>120,931.49 &mu;s</td><td>6,628.66 &mu;s</td><td>242110.66 KB</td>
+</tr></tbody></table>
+</body>
+</html>
