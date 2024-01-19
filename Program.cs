@@ -2,7 +2,7 @@
 using BenchmarkDotNetVisualizer.Utilities;
 
 #region Create reports from artifacts
-//var directory = DirectoryHelper.GetProjectBenchmarkArtifactResultsDirectory();
+//var directory = Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "results (final)");
 
 //var initializeBenchmarkInfo = BenchmarkInfo.CreateFromDirectory(directory, searchPattern: "Benchmarks.InitializeBenchmark*-report-github.md").ToArray();
 //await VisualizeInitializeBenchmarks(initializeBenchmarkInfo);
