@@ -56,15 +56,15 @@ static async Task VisualizeInitializeBenchmarks(BenchmarkInfo[] benchmarkInfo)
     options.Title = "Benchmark of Collection Initializing in terms of Execution Time (Mean)";
     options.StatisticColumns = ["Mean"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
-        htmlPath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-Initialize-Mean.html"),
-        imagePath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-Initialize-Mean.webp"),
+        htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Mean.html"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Mean.webp"),
         options: options);
 
     options.Title = "Benchmark of Collection Initializing in terms of Allocation Size";
     options.StatisticColumns = ["Allocated"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
-        htmlPath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-Initialize-Allocated.html"),
-        imagePath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-Initialize-Allocated.webp"),
+        htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Allocated.html"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Allocated.webp"),
         options: options);
 }
 
@@ -93,15 +93,15 @@ static async Task VisualizeContainsBenchmarks(BenchmarkInfo[] benchmarkInfo)
     options.Title = "Benchmark of Collection Searching (Contains method) in terms of Execution Time (Mean)";
     options.StatisticColumns = ["Mean"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
-        htmlPath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchContains-Mean.html"),
-        imagePath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchContains-Mean.webp"),
+        htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Mean.html"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Mean.webp"),
         options: options);
 
     options.Title = "Benchmark of Collection Searching (Contains method) in terms of Allocation Size";
     options.StatisticColumns = ["Allocated"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
-        htmlPath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchContains-Allocated.html"),
-        imagePath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchContains-Allocated.webp"),
+        htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Allocated.html"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Allocated.webp"),
         options: options);
 }
 
@@ -130,15 +130,15 @@ static async Task VisualizeTryGetValueBenchmarks(BenchmarkInfo[] benchmarkInfo)
     options.Title = "Benchmark of Collection Searching (TryGetValue method) in terms of Execution Time (Mean)";
     options.StatisticColumns = ["Mean"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
-        htmlPath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchTryGetValue-Mean.html"),
-        imagePath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchTryGetValue-Mean.webp"),
+        htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Mean.html"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Mean.webp"),
         options: options);
 
     options.Title = "Benchmark of Collection Searching (TryGetValue method) in terms of Allocation Size";
     options.StatisticColumns = ["Allocated"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
-        htmlPath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchTryGetValue-Allocated.html"),
-        imagePath: Path.Combine(DirectoryHelper.GetProjectBenchmarkArtifactsDirectory(), "Benchmark-SearchTryGetValue-Allocated.webp"),
+        htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Allocated.html"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Allocated.webp"),
         options: options);
 }
 
