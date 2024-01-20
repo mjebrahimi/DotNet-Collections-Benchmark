@@ -1,5 +1,5 @@
 
-# DotNet Collections Benchmark
+# .NET Collections Benchmark
 
 A comprehensive performance comparison benchmark between different .NET collections.
 
