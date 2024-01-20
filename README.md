@@ -1,7 +1,7 @@
 
 # DotNet Collections Benchmark
 
-A comprehensive performance comparison benchmark through different .NET collections.
+A comprehensive performance comparison benchmark between different .NET collections.
 
 ![.NET Collections Benchmark](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/repository-image.png)
 
@@ -59,3 +59,11 @@ If you find this repository useful and like it, why not give it a star? if not, 
 - Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated.png)
 
 ![Benchmark-SearchTryGetValue-Allocated-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated-Preview.png)
+
+## BenchmarkDotNetVisualizer
+
+All the benchmarks are visualized using [BenchmarkDotNetVisualizer](https://github.com/mjebrahimi/BenchmarkDotNetVisualizer).
+
+## Useful Resources
+
+- [.NET Big-O Algorithm Complexity Cheat Sheet](https://github.com/RehanSaeed/.NET-Big-O-Algorithm-Complexity-Cheat-Sheet)
