@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
-		<PackageReference Include="BenchmarkDotNetVisualizer" Version="1.0.1" />
+		<PackageReference Include="BenchmarkDotNetVisualizer" Version="1.0.3" />
 		<PackageReference Include="Shouldly" Version="4.2.1" />
 		<PackageReference Include="DeepEqual" Version="4.2.1" />
 	</ItemGroup>
