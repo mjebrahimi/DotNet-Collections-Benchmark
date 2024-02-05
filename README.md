@@ -1,9 +1,15 @@
 
+![.NET Collections Benchmark](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/repository-image.png)
+
 # .NET Collections Benchmark
 
 A comprehensive performance comparison benchmark between different .NET collections.
 
-![.NET Collections Benchmark](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/repository-image.png)
+> If you are working with small collections (e.g. 100 items) or your code is not HOT path (not executed frequently), it's not a big deal and you usually don't need to worry about your collection's performance. (It's better not to waste your time with premature micro-optimizations)
+> 
+> However, if you are dealing with Large collections (e.g. 100K, 1M, or more items) or your code is  HOT path (executed frequently), you should be obsessed with performance and choosing the best collection type based on your needs and conditions.
+> 
+> This benchmark report helps you to choose the best collection type in terms of performance based on your needs and conditions.
 
 ## Give it a Star! ⭐️
 
