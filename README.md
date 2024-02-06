@@ -66,7 +66,7 @@ If you find this repository useful and like it, why not give it a star? if not, 
 
 ![Benchmark-SearchTryGetValue-Allocated-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated-Preview.png)
 
-## BenchmarkDotNetVisualizer
+## BenchmarkDotNetVisualizer🌈
 
 All the benchmarks are visualized using [BenchmarkDotNetVisualizer](https://github.com/mjebrahimi/BenchmarkDotNetVisualizer).
 
