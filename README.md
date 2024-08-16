@@ -40,38 +40,39 @@ If you find this repository useful and like it, why not give it a star? if not, 
 
 ### Benchmark of Collection Initializing in terms of Execution Time (Mean)
 
-- Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Mean.html)
-- Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Mean.png)
+- **Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Mean.html)**
+- **Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Mean.png)**
 
 ![Benchmark-Initialize-Mean-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Mean-Preview.png)
 
 ### Benchmark of Collection Initializing in terms of Allocation Size
 
-- Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Allocated.html)
-- Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Allocated.png)
+- **Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Allocated.html)**
+- **Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Allocated.png)**
 
 ![Benchmark-Initialize-Allocated-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-Initialize-Allocated-Preview.png)
 
 ### Benchmark of Collection Searching (TryGetValue method) in terms of Execution Time (Mean)
 
-- Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Mean.html)
-- Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Mean.png)
+- **Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Mean.html)**
+- **Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Mean.png)**
 
 ![Benchmark-SearchTryGetValue-Mean-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Mean-Preview.png)
 
 ### Benchmark of Collection Searching (TryGetValue method) in terms of Allocation Size
 
-- Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated.html)
-- Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated.png)
+- **Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated.html)**
+- **Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated.png)**
 
 ![Benchmark-SearchTryGetValue-Allocated-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchTryGetValue-Allocated-Preview.png)
 
 ## BenchmarkDotNetVisualizer🌈
 
-All the benchmarks are visualized using [BenchmarkDotNetVisualizer](https://github.com/mjebrahimi/BenchmarkDotNetVisualizer).
+All the benchmarks are created by [BenchmarkDotNetVisualizer](https://github.com/mjebrahimi/BenchmarkDotNetVisualizer).
 
 ## Todo
 
+- [ ] Add .NET 9.0 **OrderedDictionary** to the benchmarks
 - [ ] Add benchmarks for other operations such as **Add**, **Insert**, **Remove**, and **Update**.
 
 ## Useful Resources

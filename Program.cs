@@ -44,27 +44,28 @@ static async Task VisualizeInitializeBenchmarks(BenchmarkInfo[] benchmarkInfo)
         Title = null!, //Set per case
         MainColumn = "Method",
         GroupByColumns = ["Length", "Sorted"],
-        PivotProperty = "DataType",
+        PivotColumn = "DataType",
         StatisticColumns = null!, //Set per case
         ColumnsOrder = ["Int32", "String", "StructInts", "ClassInts", "RecordStructInts", "RecordClassInts", "StructStrings", "ClassStrings", "RecordStructStrings", "RecordClassStrings"],
         SpectrumStatisticColumn = true,
         HighlightGroups = true,
         DividerMode = RenderTableDividerMode.SeparateTables,
         HtmlWrapMode = HtmlDocumentWrapMode.RichDataTables,
+        Theme = Theme.Light
     };
 
     options.Title = "Benchmark of Collection Initializing in terms of Execution Time (Mean)";
     options.StatisticColumns = ["Mean"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
         htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Mean.html"),
-        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Mean.webp"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Mean.png"),
         options: options);
 
     options.Title = "Benchmark of Collection Initializing in terms of Allocation Size";
     options.StatisticColumns = ["Allocated"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
         htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Allocated.html"),
-        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Allocated.webp"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-Initialize-Allocated.png"),
         options: options);
 }
 
@@ -80,7 +81,7 @@ static async Task VisualizeContainsBenchmarks(BenchmarkInfo[] benchmarkInfo)
         Title = null!, //Set per case
         MainColumn = "Method",
         GroupByColumns = ["Existed"],
-        PivotProperty = "DataType",
+        PivotColumn = "DataType",
         StatisticColumns = null!, //Set per case
         OtherColumnsToSelect = ["Big O", "Length"],
         ColumnsOrder = ["Int32", "String", "StructInts", "ClassInts", "RecordStructInts", "RecordClassInts", "StructStrings", "ClassStrings", "RecordStructStrings", "RecordClassStrings"],
@@ -88,20 +89,21 @@ static async Task VisualizeContainsBenchmarks(BenchmarkInfo[] benchmarkInfo)
         HighlightGroups = true,
         DividerMode = RenderTableDividerMode.SeparateTables,
         HtmlWrapMode = HtmlDocumentWrapMode.RichDataTables,
+        Theme = Theme.Light
     };
 
     options.Title = "Benchmark of Collection Searching (Contains method) in terms of Execution Time (Mean)";
     options.StatisticColumns = ["Mean"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
         htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Mean.html"),
-        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Mean.webp"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Mean.png"),
         options: options);
 
     options.Title = "Benchmark of Collection Searching (Contains method) in terms of Allocation Size";
     options.StatisticColumns = ["Allocated"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
         htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Allocated.html"),
-        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Allocated.webp"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchContains-Allocated.png"),
         options: options);
 }
 
@@ -117,7 +119,7 @@ static async Task VisualizeTryGetValueBenchmarks(BenchmarkInfo[] benchmarkInfo)
         Title = null!, //Set per case
         MainColumn = "Method",
         GroupByColumns = ["Existed"],
-        PivotProperty = "DataType",
+        PivotColumn = "DataType",
         StatisticColumns = null!, //Set per case
         OtherColumnsToSelect = ["Big O", "Length"],
         ColumnsOrder = ["Int32", "String", "StructInts", "ClassInts", "RecordStructInts", "RecordClassInts", "StructStrings", "ClassStrings", "RecordStructStrings", "RecordClassStrings"],
@@ -125,20 +127,21 @@ static async Task VisualizeTryGetValueBenchmarks(BenchmarkInfo[] benchmarkInfo)
         HighlightGroups = true,
         DividerMode = RenderTableDividerMode.SeparateTables,
         HtmlWrapMode = HtmlDocumentWrapMode.RichDataTables,
+        Theme = Theme.Light
     };
 
     options.Title = "Benchmark of Collection Searching (TryGetValue method) in terms of Execution Time (Mean)";
     options.StatisticColumns = ["Mean"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
         htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Mean.html"),
-        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Mean.webp"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Mean.png"),
         options: options);
 
     options.Title = "Benchmark of Collection Searching (TryGetValue method) in terms of Allocation Size";
     options.StatisticColumns = ["Allocated"];
     await benchmarkInfo.JoinReportsAndSaveAsHtmlAndImageAsync(
         htmlPath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Allocated.html"),
-        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Allocated.webp"),
+        imagePath: DirectoryHelper.GetPathRelativeToProjectDirectory("docs\\Benchmark-SearchTryGetValue-Allocated.png"),
         options: options);
 }
 

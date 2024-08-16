@@ -1,32 +1,81 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang='en' data-theme="light">
 <head>
 <meta charset='utf-8' />
+<meta name="color-scheme" content="dark light">
 <title>Benchmark of Collection Initializing in terms of Execution Time (Mean)</title>
-<style type="text/css">
-    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; }
-    h1, h2 { border-bottom: solid 1px #D8DEE4;}
-    h1, h2, h3 { padding-bottom: 0.3em; }
-    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
-    td, th { padding: 6px 13px; border: 1px solid #CCC; text-align: right; white-space: nowrap; }
-    tr { background-color: #FFF !important; border-top: 1px solid #CCC; }
-    tr:nth-child(even):not(.divider) { background: #F8F8F8 !important; }
-    tr.divider { border: 0; font-size: 10px; }
-    tr.divider td { padding: 0; border: 0; }
-    pre { background: #EFEFEF; padding: 0 1em; }
-    thead th { background-color: #EFEFEF; }
-    tbody tr:not(.divider):hover { background-color: #EFEFEF !important; border: 2px solid #ADADAD; }
-    .powered-by { text-align: center; margin-bottom: -20px !important; font-weight: bold; }
-</style>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/colreorder/1.5.4/css/colReorder.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <style type="text/css">
-    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; }
-    thead th:hover { background-color: #E0E0E0; }
+  :where(html){--ease-1:cubic-bezier(.25,0,.5,1);--ease-2:cubic-bezier(.25,0,.4,1);--ease-3:cubic-bezier(.25,0,.3,1);--ease-4:cubic-bezier(.25,0,.2,1);--ease-5:cubic-bezier(.25,0,.1,1);--ease-in-1:cubic-bezier(.25,0,1,1);--ease-in-2:cubic-bezier(.50,0,1,1);--ease-in-3:cubic-bezier(.70,0,1,1);--ease-in-4:cubic-bezier(.90,0,1,1);--ease-in-5:cubic-bezier(1,0,1,1);--ease-out-1:cubic-bezier(0,0,.75,1);--ease-out-2:cubic-bezier(0,0,.50,1);--ease-out-3:cubic-bezier(0,0,.3,1);--ease-out-4:cubic-bezier(0,0,.1,1);--ease-out-5:cubic-bezier(0,0,0,1);--ease-in-out-1:cubic-bezier(.1,0,.9,1);--ease-in-out-2:cubic-bezier(.3,0,.7,1);--ease-in-out-3:cubic-bezier(.5,0,.5,1);--ease-in-out-4:cubic-bezier(.7,0,.3,1);--ease-in-out-5:cubic-bezier(.9,0,.1,1);--ease-elastic-out-1:cubic-bezier(.5,.75,.75,1.25);--ease-elastic-out-2:cubic-bezier(.5,1,.75,1.25);--ease-elastic-out-3:cubic-bezier(.5,1.25,.75,1.25);--ease-elastic-out-4:cubic-bezier(.5,1.5,.75,1.25);--ease-elastic-out-5:cubic-bezier(.5,1.75,.75,1.25);--ease-elastic-in-1:cubic-bezier(.5,-0.25,.75,1);--ease-elastic-in-2:cubic-bezier(.5,-0.50,.75,1);--ease-elastic-in-3:cubic-bezier(.5,-0.75,.75,1);--ease-elastic-in-4:cubic-bezier(.5,-1.00,.75,1);--ease-elastic-in-5:cubic-bezier(.5,-1.25,.75,1);--ease-elastic-in-out-1:cubic-bezier(.5,-.1,.1,1.5);--ease-elastic-in-out-2:cubic-bezier(.5,-.3,.1,1.5);--ease-elastic-in-out-3:cubic-bezier(.5,-.5,.1,1.5);--ease-elastic-in-out-4:cubic-bezier(.5,-.7,.1,1.5);--ease-elastic-in-out-5:cubic-bezier(.5,-.9,.1,1.5);--ease-step-1:steps(2);--ease-step-2:steps(3);--ease-step-3:steps(4);--ease-step-4:steps(7);--ease-step-5:steps(10);--ease-elastic-1:var(--ease-elastic-out-1);--ease-elastic-2:var(--ease-elastic-out-2);--ease-elastic-3:var(--ease-elastic-out-3);--ease-elastic-4:var(--ease-elastic-out-4);--ease-elastic-5:var(--ease-elastic-out-5);--ease-squish-1:var(--ease-elastic-in-out-1);--ease-squish-2:var(--ease-elastic-in-out-2);--ease-squish-3:var(--ease-elastic-in-out-3);--ease-squish-4:var(--ease-elastic-in-out-4);--ease-squish-5:var(--ease-elastic-in-out-5);--ease-spring-1:linear(0,0.006,0.025 2.8%,0.101 6.1%,0.539 18.9%,0.721 25.3%,0.849 31.5%,0.937 38.1%,0.968 41.8%,0.991 45.7%,1.006 50.1%,1.015 55%,1.017 63.9%,1.001);--ease-spring-2:linear(0,0.007,0.029 2.2%,0.118 4.7%,0.625 14.4%,0.826 19%,0.902,0.962,1.008 26.1%,1.041 28.7%,1.064 32.1%,1.07 36%,1.061 40.5%,1.015 53.4%,0.999 61.6%,0.995 71.2%,1);--ease-spring-3:linear(0,0.009,0.035 2.1%,0.141 4.4%,0.723 12.9%,0.938 16.7%,1.017,1.077,1.121,1.149 24.3%,1.159,1.163,1.161,1.154 29.9%,1.129 32.8%,1.051 39.6%,1.017 43.1%,0.991,0.977 51%,0.974 53.8%,0.975 57.1%,0.997 69.8%,1.003 76.9%,1);--ease-spring-4:linear(0,0.009,0.037 1.7%,0.153 3.6%,0.776 10.3%,1.001,1.142 16%,1.185,1.209 19%,1.215 19.9% 20.8%,1.199,1.165 25%,1.056 30.3%,1.008 33%,0.973,0.955 39.2%,0.953 41.1%,0.957 43.3%,0.998 53.3%,1.009 59.1% 63.7%,0.998 78.9%,1);--ease-spring-5:linear(0,0.01,0.04 1.6%,0.161 3.3%,0.816 9.4%,1.046,1.189 14.4%,1.231,1.254 17%,1.259,1.257 18.6%,1.236,1.194 22.3%,1.057 27%,0.999 29.4%,0.955 32.1%,0.942,0.935 34.9%,0.933,0.939 38.4%,1 47.3%,1.011,1.017 52.6%,1.016 56.4%,1 65.2%,0.996 70.2%,1.001 87.2%,1);--ease-bounce-1:linear(0,0.004,0.016,0.035,0.063,0.098,0.141,0.191,0.25,0.316,0.391 36.8%,0.563,0.766,1 58.8%,0.946,0.908 69.1%,0.895,0.885,0.879,0.878,0.879,0.885,0.895,0.908 89.7%,0.946,1);--ease-bounce-2:linear(0,0.004,0.016,0.035,0.063,0.098,0.141 15.1%,0.25,0.391,0.562,0.765,1,0.892 45.2%,0.849,0.815,0.788,0.769,0.757,0.753,0.757,0.769,0.788,0.815,0.85,0.892 75.2%,1 80.2%,0.973,0.954,0.943,0.939,0.943,0.954,0.973,1);--ease-bounce-3:linear(0,0.004,0.016,0.035,0.062,0.098,0.141 11.4%,0.25,0.39,0.562,0.764,1 30.3%,0.847 34.8%,0.787,0.737,0.699,0.672,0.655,0.65,0.656,0.672,0.699,0.738,0.787,0.847 61.7%,1 66.2%,0.946,0.908,0.885 74.2%,0.879,0.878,0.879,0.885 79.5%,0.908,0.946,1 87.4%,0.981,0.968,0.96,0.957,0.96,0.968,0.981,1);--ease-bounce-4:linear(0,0.004,0.016 3%,0.062,0.141,0.25,0.391,0.562 18.2%,1 24.3%,0.81,0.676 32.3%,0.629,0.595,0.575,0.568,0.575,0.595,0.629,0.676 48.2%,0.811,1 56.2%,0.918,0.86,0.825,0.814,0.825,0.86,0.918,1 77.2%,0.94 80.6%,0.925,0.92,0.925,0.94 87.5%,1 90.9%,0.974,0.965,0.974,1);--ease-bounce-5:linear(0,0.004,0.016 2.5%,0.063,0.141,0.25 10.1%,0.562,1 20.2%,0.783,0.627,0.534 30.9%,0.511,0.503,0.511,0.534 38%,0.627,0.782,1 48.7%,0.892,0.815,0.769 56.3%,0.757,0.753,0.757,0.769 61.3%,0.815,0.892,1 68.8%,0.908 72.4%,0.885,0.878,0.885,0.908 79.4%,1 83%,0.954 85.5%,0.943,0.939,0.943,0.954 90.5%,1 93%,0.977,0.97,0.977,1)}
+  .sun-and-moon>:is(.moon,.sun,.sun-beams){transform-origin:center center}.sun-and-moon>:is(.moon,.sun){fill:var(--icon-fill)}.theme-toggle:is(:hover,:focus-visible)>.sun-and-moon>:is(.moon,.sun){fill:var(--icon-fill-hover)}.sun-and-moon>.sun-beams{stroke:var(--icon-fill);stroke-width:2px}.theme-toggle:is(:hover,:focus-visible) .sun-and-moon>.sun-beams{stroke:var(--icon-fill-hover)}[data-theme=dark] .sun-and-moon>.sun{transform:scale(1.75)}[data-theme=dark] .sun-and-moon>.sun-beams{opacity:0}[data-theme=dark] .sun-and-moon>.moon>circle{transform:translate(-7px)}@supports (cx: 1){[data-theme=dark] .sun-and-moon>.moon>circle{transform:translate(0);cx:17}}@media (prefers-reduced-motion: no-preference){.sun-and-moon>.sun{transition:transform .5s var(--ease-elastic-3)}.sun-and-moon>.sun-beams{transition:transform .5s var(--ease-elastic-4),opacity .5s var(--ease-3)}.sun-and-moon .moon>circle{transition:transform .25s var(--ease-out-5)}@supports (cx: 1){.sun-and-moon .moon>circle{transition:cx .25s var(--ease-out-5)}}[data-theme=dark] .sun-and-moon>.sun{transform:scale(1.75);transition-timing-function:var(--ease-3);transition-duration:.25s}[data-theme=dark] .sun-and-moon>.sun-beams{transform:rotate(-25deg);transition-duration:.15s}[data-theme=dark] .sun-and-moon>.moon>circle{transition-delay:.25s;transition-duration:.5s}}.theme-toggle{position:absolute;right:0;margin:0.5rem 1rem;--size: 2rem;--icon-fill: hsl(210 10% 30%);--icon-fill-hover: hsl(210 10% 15%);background:none;border:none;padding:0;inline-size:var(--size);block-size:var(--size);aspect-ratio:1;border-radius:50%;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;outline-offset:5px}.theme-toggle>svg{inline-size:100%;block-size:100%;stroke-linecap:round}[data-theme=dark] .theme-toggle{--icon-fill: hsl(210 10% 70%);--icon-fill-hover: hsl(210 15% 90%) }@media (hover: none){.theme-toggle{--size: 48px}}
+  html[data-theme="light"] {
+    color-scheme: light;
+    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; background-color: #FFFFFF; color: #1F1F1F; }
+    h1, h2 { border-bottom: solid 1px #CCCCCC;}
+    h1, h2, h3 { padding-bottom: 0.3em; }
+    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
+    td, th { padding: 6px 13px; border: 1px solid #CCCCCC; text-align: right; white-space: nowrap; color: #000000; }
+    tr { background-color: #FFFFFF !important; border-top: 1px solid #CCCCCC; }
+    tr:nth-child(even):not(.divider) { background: #F8F8F8 !important; }
+    tr.divider { border: 0; font-size: 10px; }
+    tr.divider td { padding: 0; border: 0; }
+    pre { background: #EFEFEF; padding: 0 1em; color: #1F1F1F; }
+    thead th { background-color: #EFEFEF; color: #1F1F1F; }
+    tbody tr:not(.divider):hover { background-color: #EFEFEF !important; border: 2px solid #ADADAD; }
+    .created-by { text-align: center; margin-bottom: -20px !important; font-weight: bold; }
+    .dataTables_wrapper .dataTables_filter input {border: 1px solid #AAAAAA;}
+    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; border: 1px solid #AAAAAA; outline: none;}
+    input[type="search"]:hover,input[type="search"]:focus { border-color: #666; }
+    .dataTable thead th:hover { background-color: #E0E0E0; }
+    div.dt-buttons > .dt-button {border: 1px solid #AAAAAA;}
+    div.dt-button-collection{background-color: #FFFFFF;}
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    body { font-family: system-ui; padding: 0 30px 30px 30px; width: min-content; display: inline-block; background-color: #121212; color: #E0E0E0; }
+    h1, h2 { border-bottom: solid 1px #444444; }
+    h1, h2, h3 { padding-bottom: 0.3em; }
+    table { border-collapse: collapse !important; margin-top: 3px !important; width: 100%; display: inline-table; margin-bottom: 20px !important; }
+    td, th { padding: 6px 13px; border: 1px solid #444444; text-align: right; white-space: nowrap; color: black; }
+    tr { background-color: #1E1E1E !important; border-top: 1px solid #444444; }
+    tr:nth-child(even):not(.divider) { background: #262626 !important }
+    tr.divider { border: 0; font-size: 10px; }
+    tr.divider td { padding: 0; border: 0; }
+    pre { background: #2E2E2E; padding: 0 1em; color: #E0E0E0; }
+    thead th { background-color: #2E2E2E; color: #E0E0E0; }
+    tbody tr:not(.divider):hover { background-color: #2E2E2E !important; border: 2px solid #777777; }
+    .created-by { text-align: center; margin-bottom: -20px !important; font-weight: bold; }
+    td:not([hasBackground]) { filter: invert(1); }
+    input[type="search"] { font-size: 1em !important; padding: 9px 12px !important; border: 1px solid #444444; outline: none; }
+    input[type="search"]:hover,input[type="search"]:focus { border-color: #666666; }
+    .dataTable thead th:hover { background-color: #222222; }
+    div.dt-buttons > .dt-button {border: 1px solid #444444;}
+    div.dt-button-collection{background-color: #2B2B2B;}
+  }
 </style>
 </head>
 <body>
+<button class="theme-toggle" id="theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+  <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+  <mask class="moon" id="moon-mask">
+    <rect x="0" y="0" width="100%" height="100%" fill="white" />
+    <circle cx="24" cy="10" r="6" fill="black" />
+  </mask>
+  <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+  <g class="sun-beams" stroke="currentColor">
+    <line x1="12" y1="1" x2="12" y2="3" />
+    <line x1="12" y1="21" x2="12" y2="23" />
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+    <line x1="1" y1="12" x2="3" y2="12" />
+    <line x1="21" y1="12" x2="23" y2="12" />
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </g>
+  </svg>
+</button>
 <h1>Benchmark of Collection Initializing in terms of Execution Time (Mean)</h1>
 <pre>
 <code>
@@ -49,333 +98,333 @@ WarmupCount=3
 <tbody>
 <tr>
 <td style="text-align: left">Array</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99"><strong>2.020 μs</strong></td>
-<td style="background-color: #99FF99"><strong>3.082 μs</strong></td>
-<td style="background-color: #99FF99"><strong>49.54 μs</strong></td>
-<td style="background-color: #99FF99">3.529 μs</td>
-<td style="background-color: #99FF99">48.85 μs</td>
-<td style="background-color: #99FF99">3.285 μs</td>
-<td style="background-color: #99FF99">111.9 μs</td>
-<td style="background-color: #99FF99">3.454 μs</td>
-<td style="background-color: #99FF99"><strong>109.1 μs</strong></td>
-<td style="background-color: #99FF99"><strong>3.349 μs</strong></td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground><strong>2.020 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>3.082 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>49.54 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3.529 μs</td>
+<td style="background-color: #99FF99"hasBackground>48.85 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.285 μs</td>
+<td style="background-color: #99FF99"hasBackground>111.9 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.454 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>109.1 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>3.349 μs</strong></td>
 </tr>
 <tr>
 <td style="text-align: left">ReadOnlyCollection</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99">2.065 μs</td>
-<td style="background-color: #99FF99">3.264 μs</td>
-<td style="background-color: #99FF99">52.25 μs</td>
-<td style="background-color: #99FF99"><strong>3.492 μs</strong></td>
-<td style="background-color: #99FF99">49.46 μs</td>
-<td style="background-color: #99FF99"><strong>3.233 μs</strong></td>
-<td style="background-color: #99FF99">110.8 μs</td>
-<td style="background-color: #99FF99">3.660 μs</td>
-<td style="background-color: #99FF99">109.8 μs</td>
-<td style="background-color: #99FF99">3.355 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground>2.065 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.264 μs</td>
+<td style="background-color: #99FF99"hasBackground>52.25 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3.492 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>49.46 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3.233 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>110.8 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.660 μs</td>
+<td style="background-color: #99FF99"hasBackground>109.8 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.355 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99">2.125 μs</td>
-<td style="background-color: #99FF99">3.509 μs</td>
-<td style="background-color: #99FF99">49.57 μs</td>
-<td style="background-color: #99FF99">3.551 μs</td>
-<td style="background-color: #99FF99">49.25 μs</td>
-<td style="background-color: #99FF99">3.366 μs</td>
-<td style="background-color: #99FF99"><strong>107.2 μs</strong></td>
-<td style="background-color: #99FF99">3.346 μs</td>
-<td style="background-color: #99FF99">111.2 μs</td>
-<td style="background-color: #99FF99">3.350 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground>2.125 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.509 μs</td>
+<td style="background-color: #99FF99"hasBackground>49.57 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.551 μs</td>
+<td style="background-color: #99FF99"hasBackground>49.25 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.366 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>107.2 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3.346 μs</td>
+<td style="background-color: #99FF99"hasBackground>111.2 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.350 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">List</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99">2.247 μs</td>
-<td style="background-color: #99FF99">3.441 μs</td>
-<td style="background-color: #99FF99">49.78 μs</td>
-<td style="background-color: #99FF99">3.688 μs</td>
-<td style="background-color: #99FF99"><strong>48.78 μs</strong></td>
-<td style="background-color: #99FF99">3.922 μs</td>
-<td style="background-color: #99FF99">109.9 μs</td>
-<td style="background-color: #99FF99"><strong>3.129 μs</strong></td>
-<td style="background-color: #99FF99">111.2 μs</td>
-<td style="background-color: #99FF99">3.877 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground>2.247 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.441 μs</td>
+<td style="background-color: #99FF99"hasBackground>49.78 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.688 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>48.78 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3.922 μs</td>
+<td style="background-color: #99FF99"hasBackground>109.9 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3.129 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>111.2 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.877 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">LinkedList</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #ADFF99">114.877 μs</td>
-<td style="background-color: #9DFF99">132.915 μs</td>
-<td style="background-color: #A5FF99">127.29 μs</td>
-<td style="background-color: #A7FF99">129.972 μs</td>
-<td style="background-color: #A4FF99">122.81 μs</td>
-<td style="background-color: #A7FF99">135.016 μs</td>
-<td style="background-color: #9BFF99">158.3 μs</td>
-<td style="background-color: #9DFF99">133.071 μs</td>
-<td style="background-color: #9BFF99">157.4 μs</td>
-<td style="background-color: #9DFF99">132.172 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #ADFF99"hasBackground>114.877 μs</td>
+<td style="background-color: #9DFF99"hasBackground>132.915 μs</td>
+<td style="background-color: #A5FF99"hasBackground>127.29 μs</td>
+<td style="background-color: #A7FF99"hasBackground>129.972 μs</td>
+<td style="background-color: #A4FF99"hasBackground>122.81 μs</td>
+<td style="background-color: #A7FF99"hasBackground>135.016 μs</td>
+<td style="background-color: #9BFF99"hasBackground>158.3 μs</td>
+<td style="background-color: #9DFF99"hasBackground>133.071 μs</td>
+<td style="background-color: #9BFF99"hasBackground>157.4 μs</td>
+<td style="background-color: #9DFF99"hasBackground>132.172 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #ADFF99">116.774 μs</td>
-<td style="background-color: #9FFF99">168.067 μs</td>
-<td style="background-color: #A4FF99">122.48 μs</td>
-<td style="background-color: #ABFF99">170.240 μs</td>
-<td style="background-color: #A4FF99">122.80 μs</td>
-<td style="background-color: #AAFF99">167.254 μs</td>
-<td style="background-color: #9DFF99">212.7 μs</td>
-<td style="background-color: #9FFF99">170.977 μs</td>
-<td style="background-color: #9CFF99">210.7 μs</td>
-<td style="background-color: #9FFF99">171.943 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #ADFF99"hasBackground>116.774 μs</td>
+<td style="background-color: #9FFF99"hasBackground>168.067 μs</td>
+<td style="background-color: #A4FF99"hasBackground>122.48 μs</td>
+<td style="background-color: #ABFF99"hasBackground>170.240 μs</td>
+<td style="background-color: #A4FF99"hasBackground>122.80 μs</td>
+<td style="background-color: #AAFF99"hasBackground>167.254 μs</td>
+<td style="background-color: #9DFF99"hasBackground>212.7 μs</td>
+<td style="background-color: #9FFF99"hasBackground>170.977 μs</td>
+<td style="background-color: #9CFF99"hasBackground>210.7 μs</td>
+<td style="background-color: #9FFF99"hasBackground>171.943 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Dictionary</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #B1FF99">140.964 μs</td>
-<td style="background-color: #A2FF99">265.932 μs</td>
-<td style="background-color: #C8FF99">399.97 μs</td>
-<td style="background-color: #B3FF99">255.905 μs</td>
-<td style="background-color: #BAFF99">280.11 μs</td>
-<td style="background-color: #B4FF99">273.141 μs</td>
-<td style="background-color: #B7FF99">1,023.8 μs</td>
-<td style="background-color: #AAFF99">521.498 μs</td>
-<td style="background-color: #ABFF99">638.9 μs</td>
-<td style="background-color: #AAFF99">527.394 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #B1FF99"hasBackground>140.964 μs</td>
+<td style="background-color: #A2FF99"hasBackground>265.932 μs</td>
+<td style="background-color: #C8FF99"hasBackground>399.97 μs</td>
+<td style="background-color: #B3FF99"hasBackground>255.905 μs</td>
+<td style="background-color: #BAFF99"hasBackground>280.11 μs</td>
+<td style="background-color: #B4FF99"hasBackground>273.141 μs</td>
+<td style="background-color: #B7FF99"hasBackground>1,023.8 μs</td>
+<td style="background-color: #AAFF99"hasBackground>521.498 μs</td>
+<td style="background-color: #ABFF99"hasBackground>638.9 μs</td>
+<td style="background-color: #AAFF99"hasBackground>527.394 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ReadOnlyDictionary</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #B1FF99">143.362 μs</td>
-<td style="background-color: #A3FF99">274.805 μs</td>
-<td style="background-color: #C9FF99">404.26 μs</td>
-<td style="background-color: #B3FF99">256.470 μs</td>
-<td style="background-color: #BAFF99">277.06 μs</td>
-<td style="background-color: #B5FF99">284.909 μs</td>
-<td style="background-color: #B7FF99">1,018.5 μs</td>
-<td style="background-color: #AAFF99">519.752 μs</td>
-<td style="background-color: #ACFF99">674.7 μs</td>
-<td style="background-color: #ABFF99">566.916 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #B1FF99"hasBackground>143.362 μs</td>
+<td style="background-color: #A3FF99"hasBackground>274.805 μs</td>
+<td style="background-color: #C9FF99"hasBackground>404.26 μs</td>
+<td style="background-color: #B3FF99"hasBackground>256.470 μs</td>
+<td style="background-color: #BAFF99"hasBackground>277.06 μs</td>
+<td style="background-color: #B5FF99"hasBackground>284.909 μs</td>
+<td style="background-color: #B7FF99"hasBackground>1,018.5 μs</td>
+<td style="background-color: #AAFF99"hasBackground>519.752 μs</td>
+<td style="background-color: #ACFF99"hasBackground>674.7 μs</td>
+<td style="background-color: #ABFF99"hasBackground>566.916 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">HashSet</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #B2FF99">148.196 μs</td>
-<td style="background-color: #A1FF99">241.259 μs</td>
-<td style="background-color: #C5FF99">372.90 μs</td>
-<td style="background-color: #B0FF99">226.485 μs</td>
-<td style="background-color: #AFFF99">197.72 μs</td>
-<td style="background-color: #B2FF99">248.790 μs</td>
-<td style="background-color: #B5FF99">948.9 μs</td>
-<td style="background-color: #A9FF99">498.867 μs</td>
-<td style="background-color: #A9FF99">598.2 μs</td>
-<td style="background-color: #A9FF99">493.711 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #B2FF99"hasBackground>148.196 μs</td>
+<td style="background-color: #A1FF99"hasBackground>241.259 μs</td>
+<td style="background-color: #C5FF99"hasBackground>372.90 μs</td>
+<td style="background-color: #B0FF99"hasBackground>226.485 μs</td>
+<td style="background-color: #AFFF99"hasBackground>197.72 μs</td>
+<td style="background-color: #B2FF99"hasBackground>248.790 μs</td>
+<td style="background-color: #B5FF99"hasBackground>948.9 μs</td>
+<td style="background-color: #A9FF99"hasBackground>498.867 μs</td>
+<td style="background-color: #A9FF99"hasBackground>598.2 μs</td>
+<td style="background-color: #A9FF99"hasBackground>493.711 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Array (Sorted)</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #CBFF99">324.932 μs</td>
-<td style="background-color: #FEFF99">5,156.343 μs</td>
-<td style="background-color: #D1FF99">478.77 μs</td>
-<td style="background-color: #DBFF99">747.774 μs</td>
-<td style="background-color: #D3FF99">487.19 μs</td>
-<td style="background-color: #DCFF99">781.367 μs</td>
-<td style="background-color: #FFFE99">5,916.1 μs</td>
-<td style="background-color: #FFFF99">5,754.522 μs</td>
-<td style="background-color: #FFFE99">5,979.4 μs</td>
-<td style="background-color: #FFFF99">5,710.599 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #CBFF99"hasBackground>324.932 μs</td>
+<td style="background-color: #FEFF99"hasBackground>5,156.343 μs</td>
+<td style="background-color: #D1FF99"hasBackground>478.77 μs</td>
+<td style="background-color: #DBFF99"hasBackground>747.774 μs</td>
+<td style="background-color: #D3FF99"hasBackground>487.19 μs</td>
+<td style="background-color: #DCFF99"hasBackground>781.367 μs</td>
+<td style="background-color: #FFFE99"hasBackground>5,916.1 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,754.522 μs</td>
+<td style="background-color: #FFFE99"hasBackground>5,979.4 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,710.599 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">List (Sorted)</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #CBFF99">326.058 μs</td>
-<td style="background-color: #FEFF99">5,106.965 μs</td>
-<td style="background-color: #D1FF99">480.98 μs</td>
-<td style="background-color: #DBFF99">754.041 μs</td>
-<td style="background-color: #D4FF99">503.64 μs</td>
-<td style="background-color: #DDFF99">790.429 μs</td>
-<td style="background-color: #FFFC99">6,068.8 μs</td>
-<td style="background-color: #FFFF99">5,844.496 μs</td>
-<td style="background-color: #FFFF99">5,895.5 μs</td>
-<td style="background-color: #FFFF99">5,731.839 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #CBFF99"hasBackground>326.058 μs</td>
+<td style="background-color: #FEFF99"hasBackground>5,106.965 μs</td>
+<td style="background-color: #D1FF99"hasBackground>480.98 μs</td>
+<td style="background-color: #DBFF99"hasBackground>754.041 μs</td>
+<td style="background-color: #D4FF99"hasBackground>503.64 μs</td>
+<td style="background-color: #DDFF99"hasBackground>790.429 μs</td>
+<td style="background-color: #FFFC99"hasBackground>6,068.8 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,844.496 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,895.5 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,731.839 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray (Sorted)</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #CBFF99">326.504 μs</td>
-<td style="background-color: #FFFF99">5,192.886 μs</td>
-<td style="background-color: #D2FF99">495.91 μs</td>
-<td style="background-color: #DBFF99">747.096 μs</td>
-<td style="background-color: #D3FF99">489.48 μs</td>
-<td style="background-color: #DAFF99">747.232 μs</td>
-<td style="background-color: #FFFB99">6,239.0 μs</td>
-<td style="background-color: #FFFF99">5,723.010 μs</td>
-<td style="background-color: #FFFD99">6,083.9 μs</td>
-<td style="background-color: #FFFF99">5,707.202 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #CBFF99"hasBackground>326.504 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,192.886 μs</td>
+<td style="background-color: #D2FF99"hasBackground>495.91 μs</td>
+<td style="background-color: #DBFF99"hasBackground>747.096 μs</td>
+<td style="background-color: #D3FF99"hasBackground>489.48 μs</td>
+<td style="background-color: #DAFF99"hasBackground>747.232 μs</td>
+<td style="background-color: #FFFB99"hasBackground>6,239.0 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,723.010 μs</td>
+<td style="background-color: #FFFD99"hasBackground>6,083.9 μs</td>
+<td style="background-color: #FFFF99"hasBackground>5,707.202 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenSet</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #D5FF99">407.216 μs</td>
-<td style="background-color: #C7FF99">1,432.992 μs</td>
-<td style="background-color: #F3FF99">920.72 μs</td>
-<td style="background-color: #D4FF99">643.034 μs</td>
-<td style="background-color: #DEFF99">605.76 μs</td>
-<td style="background-color: #D6FF99">689.554 μs</td>
-<td style="background-color: #D3FF99">2,043.1 μs</td>
-<td style="background-color: #BDFF99">1,155.110 μs</td>
-<td style="background-color: #BDFF99">1,231.4 μs</td>
-<td style="background-color: #BEFF99">1,205.622 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #D5FF99"hasBackground>407.216 μs</td>
+<td style="background-color: #C7FF99"hasBackground>1,432.992 μs</td>
+<td style="background-color: #F3FF99"hasBackground>920.72 μs</td>
+<td style="background-color: #D4FF99"hasBackground>643.034 μs</td>
+<td style="background-color: #DEFF99"hasBackground>605.76 μs</td>
+<td style="background-color: #D6FF99"hasBackground>689.554 μs</td>
+<td style="background-color: #D3FF99"hasBackground>2,043.1 μs</td>
+<td style="background-color: #BDFF99"hasBackground>1,155.110 μs</td>
+<td style="background-color: #BDFF99"hasBackground>1,231.4 μs</td>
+<td style="background-color: #BEFF99"hasBackground>1,205.622 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedSet</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #D7FF99">414.855 μs</td>
-<td style="background-color: #FFFD99">5,684.240 μs</td>
-<td style="background-color: #DDFF99">607.60 μs</td>
-<td style="background-color: #E3FF99">885.444 μs</td>
-<td style="background-color: #DFFF99">615.15 μs</td>
-<td style="background-color: #E1FF99">855.998 μs</td>
-<td style="background-color: #FFF899">6,563.2 μs</td>
-<td style="background-color: #FFFC99">6,252.427 μs</td>
-<td style="background-color: #FFF899">6,691.2 μs</td>
-<td style="background-color: #FFFB99">6,403.660 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #D7FF99"hasBackground>414.855 μs</td>
+<td style="background-color: #FFFD99"hasBackground>5,684.240 μs</td>
+<td style="background-color: #DDFF99"hasBackground>607.60 μs</td>
+<td style="background-color: #E3FF99"hasBackground>885.444 μs</td>
+<td style="background-color: #DFFF99"hasBackground>615.15 μs</td>
+<td style="background-color: #E1FF99"hasBackground>855.998 μs</td>
+<td style="background-color: #FFF899"hasBackground>6,563.2 μs</td>
+<td style="background-color: #FFFC99"hasBackground>6,252.427 μs</td>
+<td style="background-color: #FFF899"hasBackground>6,691.2 μs</td>
+<td style="background-color: #FFFB99"hasBackground>6,403.660 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenDictionary</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #DAFF99">444.312 μs</td>
-<td style="background-color: #C4FF99">1,328.777 μs</td>
-<td style="background-color: #F1FF99">874.80 μs</td>
-<td style="background-color: #DBFF99">756.472 μs</td>
-<td style="background-color: #DFFF99">621.41 μs</td>
-<td style="background-color: #DDFF99">800.424 μs</td>
-<td style="background-color: #D3FF99">2,052.6 μs</td>
-<td style="background-color: #BFFF99">1,242.227 μs</td>
-<td style="background-color: #BDFF99">1,257.2 μs</td>
-<td style="background-color: #C1FF99">1,323.209 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #DAFF99"hasBackground>444.312 μs</td>
+<td style="background-color: #C4FF99"hasBackground>1,328.777 μs</td>
+<td style="background-color: #F1FF99"hasBackground>874.80 μs</td>
+<td style="background-color: #DBFF99"hasBackground>756.472 μs</td>
+<td style="background-color: #DFFF99"hasBackground>621.41 μs</td>
+<td style="background-color: #DDFF99"hasBackground>800.424 μs</td>
+<td style="background-color: #D3FF99"hasBackground>2,052.6 μs</td>
+<td style="background-color: #BFFF99"hasBackground>1,242.227 μs</td>
+<td style="background-color: #BDFF99"hasBackground>1,257.2 μs</td>
+<td style="background-color: #C1FF99"hasBackground>1,323.209 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedSet</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #DBFF99">456.041 μs</td>
-<td style="background-color: #FFFD99">5,760.166 μs</td>
-<td style="background-color: #E1FF99">650.17 μs</td>
-<td style="background-color: #E8FF99">971.541 μs</td>
-<td style="background-color: #E2FF99">652.53 μs</td>
-<td style="background-color: #EAFF99">1,024.883 μs</td>
-<td style="background-color: #FFF099">7,287.7 μs</td>
-<td style="background-color: #FFFB99">6,342.280 μs</td>
-<td style="background-color: #FFF999">6,563.3 μs</td>
-<td style="background-color: #FFFA99">6,496.165 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #DBFF99"hasBackground>456.041 μs</td>
+<td style="background-color: #FFFD99"hasBackground>5,760.166 μs</td>
+<td style="background-color: #E1FF99"hasBackground>650.17 μs</td>
+<td style="background-color: #E8FF99"hasBackground>971.541 μs</td>
+<td style="background-color: #E2FF99"hasBackground>652.53 μs</td>
+<td style="background-color: #EAFF99"hasBackground>1,024.883 μs</td>
+<td style="background-color: #FFF099"hasBackground>7,287.7 μs</td>
+<td style="background-color: #FFFB99"hasBackground>6,342.280 μs</td>
+<td style="background-color: #FFF999"hasBackground>6,563.3 μs</td>
+<td style="background-color: #FFFA99"hasBackground>6,496.165 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedList</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #EBFF99">628.833 μs</td>
-<td style="background-color: #FFFA99">6,016.551 μs</td>
-<td style="background-color: #F6FF99">974.07 μs</td>
-<td style="background-color: #F2FF99">1,190.681 μs</td>
-<td style="background-color: #F6FF99">956.76 μs</td>
-<td style="background-color: #F3FF99">1,214.383 μs</td>
-<td style="background-color: #FFED99">7,631.9 μs</td>
-<td style="background-color: #FFF699">6,857.941 μs</td>
-<td style="background-color: #FFEF99">7,527.8 μs</td>
-<td style="background-color: #FFF599">7,006.464 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #EBFF99"hasBackground>628.833 μs</td>
+<td style="background-color: #FFFA99"hasBackground>6,016.551 μs</td>
+<td style="background-color: #F6FF99"hasBackground>974.07 μs</td>
+<td style="background-color: #F2FF99"hasBackground>1,190.681 μs</td>
+<td style="background-color: #F6FF99"hasBackground>956.76 μs</td>
+<td style="background-color: #F3FF99"hasBackground>1,214.383 μs</td>
+<td style="background-color: #FFED99"hasBackground>7,631.9 μs</td>
+<td style="background-color: #FFF699"hasBackground>6,857.941 μs</td>
+<td style="background-color: #FFEF99"hasBackground>7,527.8 μs</td>
+<td style="background-color: #FFF599"hasBackground>7,006.464 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList (Sorted)</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #EDFF99">654.541 μs</td>
-<td style="background-color: #FFFC99">5,806.514 μs</td>
-<td style="background-color: #F0FF99">869.22 μs</td>
-<td style="background-color: #F9FF99">1,403.213 μs</td>
-<td style="background-color: #F1FF99">853.70 μs</td>
-<td style="background-color: #F8FF99">1,388.404 μs</td>
-<td style="background-color: #FFF699">6,757.5 μs</td>
-<td style="background-color: #FFFB99">6,387.129 μs</td>
-<td style="background-color: #FFF799">6,701.1 μs</td>
-<td style="background-color: #FFF999">6,517.718 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #EDFF99"hasBackground>654.541 μs</td>
+<td style="background-color: #FFFC99"hasBackground>5,806.514 μs</td>
+<td style="background-color: #F0FF99"hasBackground>869.22 μs</td>
+<td style="background-color: #F9FF99"hasBackground>1,403.213 μs</td>
+<td style="background-color: #F1FF99"hasBackground>853.70 μs</td>
+<td style="background-color: #F8FF99"hasBackground>1,388.404 μs</td>
+<td style="background-color: #FFF699"hasBackground>6,757.5 μs</td>
+<td style="background-color: #FFFB99"hasBackground>6,387.129 μs</td>
+<td style="background-color: #FFF799"hasBackground>6,701.1 μs</td>
+<td style="background-color: #FFF999"hasBackground>6,517.718 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedDictionary</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FFF799">1,289.650 μs</td>
-<td style="background-color: #FFFA99">6,019.642 μs</td>
-<td style="background-color: #FFF499">1,629.18 μs</td>
-<td style="background-color: #FFF399">2,217.730 μs</td>
-<td style="background-color: #FFF799">1,526.66 μs</td>
-<td style="background-color: #FFF399">2,270.468 μs</td>
-<td style="background-color: #FFF899">6,509.8 μs</td>
-<td style="background-color: #FFF799">6,724.190 μs</td>
-<td style="background-color: #FFFB99">6,330.0 μs</td>
-<td style="background-color: #FFF899">6,712.728 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FFF799"hasBackground>1,289.650 μs</td>
+<td style="background-color: #FFFA99"hasBackground>6,019.642 μs</td>
+<td style="background-color: #FFF499"hasBackground>1,629.18 μs</td>
+<td style="background-color: #FFF399"hasBackground>2,217.730 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,526.66 μs</td>
+<td style="background-color: #FFF399"hasBackground>2,270.468 μs</td>
+<td style="background-color: #FFF899"hasBackground>6,509.8 μs</td>
+<td style="background-color: #FFF799"hasBackground>6,724.190 μs</td>
+<td style="background-color: #FFFB99"hasBackground>6,330.0 μs</td>
+<td style="background-color: #FFF899"hasBackground>6,712.728 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedDictionary</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FFCC99">1,953.540 μs</td>
-<td style="background-color: #FF9999">11,013.998 μs</td>
-<td style="background-color: #FFB999">2,547.80 μs</td>
-<td style="background-color: #FF9999">3,654.423 μs</td>
-<td style="background-color: #FF9999">2,613.99 μs</td>
-<td style="background-color: #FF9999">3,719.728 μs</td>
-<td style="background-color: #FF9999">11,453.6 μs</td>
-<td style="background-color: #FF9999">11,775.346 μs</td>
-<td style="background-color: #FF9999">11,672.2 μs</td>
-<td style="background-color: #FF9999">11,810.306 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FFCC99"hasBackground>1,953.540 μs</td>
+<td style="background-color: #FF9999"hasBackground>11,013.998 μs</td>
+<td style="background-color: #FFB999"hasBackground>2,547.80 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,654.423 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,613.99 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,719.728 μs</td>
+<td style="background-color: #FF9999"hasBackground>11,453.6 μs</td>
+<td style="background-color: #FF9999"hasBackground>11,775.346 μs</td>
+<td style="background-color: #FF9999"hasBackground>11,672.2 μs</td>
+<td style="background-color: #FF9999"hasBackground>11,810.306 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableHashSet</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FFC999">1,979.512 μs</td>
-<td style="background-color: #E1FF99">2,544.854 μs</td>
-<td style="background-color: #FFBF99">2,490.51 μs</td>
-<td style="background-color: #FFE199">2,738.551 μs</td>
-<td style="background-color: #FFCE99">2,263.04 μs</td>
-<td style="background-color: #FFE899">2,593.169 μs</td>
-<td style="background-color: #E8FF99">3,093.5 μs</td>
-<td style="background-color: #E3FF99">2,784.962 μs</td>
-<td style="background-color: #E0FF99">2,697.5 μs</td>
-<td style="background-color: #E3FF99">2,805.189 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FFC999"hasBackground>1,979.512 μs</td>
+<td style="background-color: #E1FF99"hasBackground>2,544.854 μs</td>
+<td style="background-color: #FFBF99"hasBackground>2,490.51 μs</td>
+<td style="background-color: #FFE199"hasBackground>2,738.551 μs</td>
+<td style="background-color: #FFCE99"hasBackground>2,263.04 μs</td>
+<td style="background-color: #FFE899"hasBackground>2,593.169 μs</td>
+<td style="background-color: #E8FF99"hasBackground>3,093.5 μs</td>
+<td style="background-color: #E3FF99"hasBackground>2,784.962 μs</td>
+<td style="background-color: #E0FF99"hasBackground>2,697.5 μs</td>
+<td style="background-color: #E3FF99"hasBackground>2,805.189 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableDictionary</td>
-<td style="background-color: #FFCCFF">10000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FF9999">2,228.753 μs</td>
-<td style="background-color: #E3FF99">2,632.661 μs</td>
-<td style="background-color: #FF9999">2,677.68 μs</td>
-<td style="background-color: #FFE699">2,612.836 μs</td>
-<td style="background-color: #FFC599">2,376.88 μs</td>
-<td style="background-color: #FFE699">2,650.795 μs</td>
-<td style="background-color: #F4FF99">3,957.3 μs</td>
-<td style="background-color: #E7FF99">3,038.927 μs</td>
-<td style="background-color: #E3FF99">2,891.3 μs</td>
-<td style="background-color: #E4FF99">2,898.711 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FF9999"hasBackground>2,228.753 μs</td>
+<td style="background-color: #E3FF99"hasBackground>2,632.661 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,677.68 μs</td>
+<td style="background-color: #FFE699"hasBackground>2,612.836 μs</td>
+<td style="background-color: #FFC599"hasBackground>2,376.88 μs</td>
+<td style="background-color: #FFE699"hasBackground>2,650.795 μs</td>
+<td style="background-color: #F4FF99"hasBackground>3,957.3 μs</td>
+<td style="background-color: #E7FF99"hasBackground>3,038.927 μs</td>
+<td style="background-color: #E3FF99"hasBackground>2,891.3 μs</td>
+<td style="background-color: #E4FF99"hasBackground>2,898.711 μs</td>
 </tr>
 </tbody>
 </table>
@@ -388,333 +437,333 @@ WarmupCount=3
 <tbody>
 <tr>
 <td style="text-align: left">Array</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99"><strong>1.849 μs</strong></td>
-<td style="background-color: #99FF99"><strong>3.384 μs</strong></td>
-<td style="background-color: #99FF99">49.98 μs</td>
-<td style="background-color: #99FF99">4.005 μs</td>
-<td style="background-color: #99FF99">50.55 μs</td>
-<td style="background-color: #99FF99"><strong>3.187 μs</strong></td>
-<td style="background-color: #99FF99">110.6 μs</td>
-<td style="background-color: #99FF99">3.588 μs</td>
-<td style="background-color: #99FF99">109.4 μs</td>
-<td style="background-color: #99FF99">3.254 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground><strong>1.849 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>3.384 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>49.98 μs</td>
+<td style="background-color: #99FF99"hasBackground>4.005 μs</td>
+<td style="background-color: #99FF99"hasBackground>50.55 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3.187 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>110.6 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.588 μs</td>
+<td style="background-color: #99FF99"hasBackground>109.4 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.254 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ReadOnlyCollection</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99">1.950 μs</td>
-<td style="background-color: #99FF99">3.469 μs</td>
-<td style="background-color: #99FF99">49.92 μs</td>
-<td style="background-color: #99FF99">3.607 μs</td>
-<td style="background-color: #99FF99"><strong>48.99 μs</strong></td>
-<td style="background-color: #99FF99">3.843 μs</td>
-<td style="background-color: #99FF99">110.3 μs</td>
-<td style="background-color: #99FF99">3.778 μs</td>
-<td style="background-color: #99FF99">110.5 μs</td>
-<td style="background-color: #99FF99">3.536 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground>1.950 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.469 μs</td>
+<td style="background-color: #99FF99"hasBackground>49.92 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.607 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>48.99 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3.843 μs</td>
+<td style="background-color: #99FF99"hasBackground>110.3 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.778 μs</td>
+<td style="background-color: #99FF99"hasBackground>110.5 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.536 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99">2.096 μs</td>
-<td style="background-color: #99FF99">3.508 μs</td>
-<td style="background-color: #99FF99">49.59 μs</td>
-<td style="background-color: #99FF99"><strong>3.451 μs</strong></td>
-<td style="background-color: #99FF99">49.22 μs</td>
-<td style="background-color: #99FF99">3.331 μs</td>
-<td style="background-color: #99FF99"><strong>108.4 μs</strong></td>
-<td style="background-color: #99FF99">3.579 μs</td>
-<td style="background-color: #99FF99"><strong>108.5 μs</strong></td>
-<td style="background-color: #99FF99"><strong>2.981 μs</strong></td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground>2.096 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.508 μs</td>
+<td style="background-color: #99FF99"hasBackground>49.59 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3.451 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>49.22 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.331 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>108.4 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3.579 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>108.5 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>2.981 μs</strong></td>
 </tr>
 <tr>
 <td style="text-align: left">List</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99">2.301 μs</td>
-<td style="background-color: #99FF99">3.390 μs</td>
-<td style="background-color: #99FF99"><strong>48.99 μs</strong></td>
-<td style="background-color: #99FF99">3.547 μs</td>
-<td style="background-color: #99FF99">49.33 μs</td>
-<td style="background-color: #99FF99">4.048 μs</td>
-<td style="background-color: #99FF99">110.0 μs</td>
-<td style="background-color: #99FF99"><strong>2.976 μs</strong></td>
-<td style="background-color: #99FF99">111.0 μs</td>
-<td style="background-color: #99FF99">3.345 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground>2.301 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.390 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>48.99 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3.547 μs</td>
+<td style="background-color: #99FF99"hasBackground>49.33 μs</td>
+<td style="background-color: #99FF99"hasBackground>4.048 μs</td>
+<td style="background-color: #99FF99"hasBackground>110.0 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>2.976 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>111.0 μs</td>
+<td style="background-color: #99FF99"hasBackground>3.345 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray (Sorted)</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #9BFF99">8.295 μs</td>
-<td style="background-color: #A5FF99">434.603 μs</td>
-<td style="background-color: #9BFF99">61.10 μs</td>
-<td style="background-color: #9EFF99">43.909 μs</td>
-<td style="background-color: #9BFF99">59.56 μs</td>
-<td style="background-color: #9EFF99">42.374 μs</td>
-<td style="background-color: #A6FF99">552.4 μs</td>
-<td style="background-color: #A7FF99">526.995 μs</td>
-<td style="background-color: #A6FF99">558.7 μs</td>
-<td style="background-color: #A7FF99">507.635 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #9BFF99"hasBackground>8.295 μs</td>
+<td style="background-color: #A5FF99"hasBackground>434.603 μs</td>
+<td style="background-color: #9BFF99"hasBackground>61.10 μs</td>
+<td style="background-color: #9EFF99"hasBackground>43.909 μs</td>
+<td style="background-color: #9BFF99"hasBackground>59.56 μs</td>
+<td style="background-color: #9EFF99"hasBackground>42.374 μs</td>
+<td style="background-color: #A6FF99"hasBackground>552.4 μs</td>
+<td style="background-color: #A7FF99"hasBackground>526.995 μs</td>
+<td style="background-color: #A6FF99"hasBackground>558.7 μs</td>
+<td style="background-color: #A7FF99"hasBackground>507.635 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Array (Sorted)</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #A4FF99">40.223 μs</td>
-<td style="background-color: #E6FF99">3,506.397 μs</td>
-<td style="background-color: #A7FF99">141.70 μs</td>
-<td style="background-color: #BAFF99">272.357 μs</td>
-<td style="background-color: #A8FF99">142.19 μs</td>
-<td style="background-color: #BAFF99">275.517 μs</td>
-<td style="background-color: #E9FF99">3,726.6 μs</td>
-<td style="background-color: #E9FF99">3,855.092 μs</td>
-<td style="background-color: #E9FF99">3,723.7 μs</td>
-<td style="background-color: #EBFF99">4,078.451 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #A4FF99"hasBackground>40.223 μs</td>
+<td style="background-color: #E6FF99"hasBackground>3,506.397 μs</td>
+<td style="background-color: #A7FF99"hasBackground>141.70 μs</td>
+<td style="background-color: #BAFF99"hasBackground>272.357 μs</td>
+<td style="background-color: #A8FF99"hasBackground>142.19 μs</td>
+<td style="background-color: #BAFF99"hasBackground>275.517 μs</td>
+<td style="background-color: #E9FF99"hasBackground>3,726.6 μs</td>
+<td style="background-color: #E9FF99"hasBackground>3,855.092 μs</td>
+<td style="background-color: #E9FF99"hasBackground>3,723.7 μs</td>
+<td style="background-color: #EBFF99"hasBackground>4,078.451 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">List (Sorted)</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #A4FF99">40.531 μs</td>
-<td style="background-color: #E6FF99">3,529.088 μs</td>
-<td style="background-color: #A7FF99">142.81 μs</td>
-<td style="background-color: #B8FF99">258.926 μs</td>
-<td style="background-color: #A8FF99">142.27 μs</td>
-<td style="background-color: #BAFF99">271.843 μs</td>
-<td style="background-color: #E9FF99">3,702.6 μs</td>
-<td style="background-color: #E8FF99">3,806.999 μs</td>
-<td style="background-color: #EAFF99">3,816.7 μs</td>
-<td style="background-color: #E9FF99">3,899.622 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #A4FF99"hasBackground>40.531 μs</td>
+<td style="background-color: #E6FF99"hasBackground>3,529.088 μs</td>
+<td style="background-color: #A7FF99"hasBackground>142.81 μs</td>
+<td style="background-color: #B8FF99"hasBackground>258.926 μs</td>
+<td style="background-color: #A8FF99"hasBackground>142.27 μs</td>
+<td style="background-color: #BAFF99"hasBackground>271.843 μs</td>
+<td style="background-color: #E9FF99"hasBackground>3,702.6 μs</td>
+<td style="background-color: #E8FF99"hasBackground>3,806.999 μs</td>
+<td style="background-color: #EAFF99"hasBackground>3,816.7 μs</td>
+<td style="background-color: #E9FF99"hasBackground>3,899.622 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #B8FF99">116.066 μs</td>
-<td style="background-color: #9EFF99">175.379 μs</td>
-<td style="background-color: #A4FF99">121.77 μs</td>
-<td style="background-color: #AEFF99">171.507 μs</td>
-<td style="background-color: #A5FF99">121.17 μs</td>
-<td style="background-color: #AEFF99">169.641 μs</td>
-<td style="background-color: #9CFF99">213.8 μs</td>
-<td style="background-color: #9DFF99">171.575 μs</td>
-<td style="background-color: #9CFF99">210.5 μs</td>
-<td style="background-color: #9DFF99">168.528 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #B8FF99"hasBackground>116.066 μs</td>
+<td style="background-color: #9EFF99"hasBackground>175.379 μs</td>
+<td style="background-color: #A4FF99"hasBackground>121.77 μs</td>
+<td style="background-color: #AEFF99"hasBackground>171.507 μs</td>
+<td style="background-color: #A5FF99"hasBackground>121.17 μs</td>
+<td style="background-color: #AEFF99"hasBackground>169.641 μs</td>
+<td style="background-color: #9CFF99"hasBackground>213.8 μs</td>
+<td style="background-color: #9DFF99"hasBackground>171.575 μs</td>
+<td style="background-color: #9CFF99"hasBackground>210.5 μs</td>
+<td style="background-color: #9DFF99"hasBackground>168.528 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">LinkedList</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #B8FF99">116.991 μs</td>
-<td style="background-color: #9DFF99">132.986 μs</td>
-<td style="background-color: #A5FF99">126.44 μs</td>
-<td style="background-color: #A9FF99">130.148 μs</td>
-<td style="background-color: #A6FF99">126.81 μs</td>
-<td style="background-color: #A9FF99">129.226 μs</td>
-<td style="background-color: #9AFF99">155.2 μs</td>
-<td style="background-color: #9DFF99">136.625 μs</td>
-<td style="background-color: #9AFF99">155.6 μs</td>
-<td style="background-color: #9DFF99">131.705 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #B8FF99"hasBackground>116.991 μs</td>
+<td style="background-color: #9DFF99"hasBackground>132.986 μs</td>
+<td style="background-color: #A5FF99"hasBackground>126.44 μs</td>
+<td style="background-color: #A9FF99"hasBackground>130.148 μs</td>
+<td style="background-color: #A6FF99"hasBackground>126.81 μs</td>
+<td style="background-color: #A9FF99"hasBackground>129.226 μs</td>
+<td style="background-color: #9AFF99"hasBackground>155.2 μs</td>
+<td style="background-color: #9DFF99"hasBackground>136.625 μs</td>
+<td style="background-color: #9AFF99"hasBackground>155.6 μs</td>
+<td style="background-color: #9DFF99"hasBackground>131.705 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ReadOnlyDictionary</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #BDFF99">136.765 μs</td>
-<td style="background-color: #A2FF99">332.409 μs</td>
-<td style="background-color: #C9FF99">405.17 μs</td>
-<td style="background-color: #BDFF99">304.997 μs</td>
-<td style="background-color: #BCFF99">273.74 μs</td>
-<td style="background-color: #BFFF99">319.528 μs</td>
-<td style="background-color: #B3FF99">1,041.7 μs</td>
-<td style="background-color: #A9FF99">579.102 μs</td>
-<td style="background-color: #ACFF99">787.1 μs</td>
-<td style="background-color: #A9FF99">607.477 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #BDFF99"hasBackground>136.765 μs</td>
+<td style="background-color: #A2FF99"hasBackground>332.409 μs</td>
+<td style="background-color: #C9FF99"hasBackground>405.17 μs</td>
+<td style="background-color: #BDFF99"hasBackground>304.997 μs</td>
+<td style="background-color: #BCFF99"hasBackground>273.74 μs</td>
+<td style="background-color: #BFFF99"hasBackground>319.528 μs</td>
+<td style="background-color: #B3FF99"hasBackground>1,041.7 μs</td>
+<td style="background-color: #A9FF99"hasBackground>579.102 μs</td>
+<td style="background-color: #ACFF99"hasBackground>787.1 μs</td>
+<td style="background-color: #A9FF99"hasBackground>607.477 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedSet</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #BDFF99">137.815 μs</td>
-<td style="background-color: #EDFF99">4,029.597 μs</td>
-<td style="background-color: #B8FF99">265.47 μs</td>
-<td style="background-color: #C6FF99">391.434 μs</td>
-<td style="background-color: #BCFF99">270.67 μs</td>
-<td style="background-color: #C7FF99">392.659 μs</td>
-<td style="background-color: #F1FF99">4,392.3 μs</td>
-<td style="background-color: #F2FF99">4,656.899 μs</td>
-<td style="background-color: #F1FF99">4,368.5 μs</td>
-<td style="background-color: #F1FF99">4,528.383 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #BDFF99"hasBackground>137.815 μs</td>
+<td style="background-color: #EDFF99"hasBackground>4,029.597 μs</td>
+<td style="background-color: #B8FF99"hasBackground>265.47 μs</td>
+<td style="background-color: #C6FF99"hasBackground>391.434 μs</td>
+<td style="background-color: #BCFF99"hasBackground>270.67 μs</td>
+<td style="background-color: #C7FF99"hasBackground>392.659 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,392.3 μs</td>
+<td style="background-color: #F2FF99"hasBackground>4,656.899 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,368.5 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,528.383 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Dictionary</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #BEFF99">142.937 μs</td>
-<td style="background-color: #A2FF99">334.870 μs</td>
-<td style="background-color: #C8FF99">395.55 μs</td>
-<td style="background-color: #BDFF99">306.255 μs</td>
-<td style="background-color: #BDFF99">275.55 μs</td>
-<td style="background-color: #BEFF99">312.003 μs</td>
-<td style="background-color: #B3FF99">1,044.8 μs</td>
-<td style="background-color: #A9FF99">588.393 μs</td>
-<td style="background-color: #ACFF99">782.3 μs</td>
-<td style="background-color: #AAFF99">639.324 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #BEFF99"hasBackground>142.937 μs</td>
+<td style="background-color: #A2FF99"hasBackground>334.870 μs</td>
+<td style="background-color: #C8FF99"hasBackground>395.55 μs</td>
+<td style="background-color: #BDFF99"hasBackground>306.255 μs</td>
+<td style="background-color: #BDFF99"hasBackground>275.55 μs</td>
+<td style="background-color: #BEFF99"hasBackground>312.003 μs</td>
+<td style="background-color: #B3FF99"hasBackground>1,044.8 μs</td>
+<td style="background-color: #A9FF99"hasBackground>588.393 μs</td>
+<td style="background-color: #ACFF99"hasBackground>782.3 μs</td>
+<td style="background-color: #AAFF99"hasBackground>639.324 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">HashSet</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #BFFF99">147.227 μs</td>
-<td style="background-color: #A1FF99">283.599 μs</td>
-<td style="background-color: #C5FF99">372.84 μs</td>
-<td style="background-color: #BAFF99">273.213 μs</td>
-<td style="background-color: #B2FF99">202.42 μs</td>
-<td style="background-color: #BAFF99">275.069 μs</td>
-<td style="background-color: #B3FF99">1,024.8 μs</td>
-<td style="background-color: #A8FF99">549.739 μs</td>
-<td style="background-color: #AAFF99">698.1 μs</td>
-<td style="background-color: #A8FF99">568.376 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #BFFF99"hasBackground>147.227 μs</td>
+<td style="background-color: #A1FF99"hasBackground>283.599 μs</td>
+<td style="background-color: #C5FF99"hasBackground>372.84 μs</td>
+<td style="background-color: #BAFF99"hasBackground>273.213 μs</td>
+<td style="background-color: #B2FF99"hasBackground>202.42 μs</td>
+<td style="background-color: #BAFF99"hasBackground>275.069 μs</td>
+<td style="background-color: #B3FF99"hasBackground>1,024.8 μs</td>
+<td style="background-color: #A8FF99"hasBackground>549.739 μs</td>
+<td style="background-color: #AAFF99"hasBackground>698.1 μs</td>
+<td style="background-color: #A8FF99"hasBackground>568.376 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedSet</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #C5FF99">172.463 μs</td>
-<td style="background-color: #EFFF99">4,155.903 μs</td>
-<td style="background-color: #BDFF99">303.40 μs</td>
-<td style="background-color: #D0FF99">494.140 μs</td>
-<td style="background-color: #C0FF99">299.38 μs</td>
-<td style="background-color: #D0FF99">486.520 μs</td>
-<td style="background-color: #F1FF99">4,429.0 μs</td>
-<td style="background-color: #F1FF99">4,526.199 μs</td>
-<td style="background-color: #F2FF99">4,477.8 μs</td>
-<td style="background-color: #F2FF99">4,659.316 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #C5FF99"hasBackground>172.463 μs</td>
+<td style="background-color: #EFFF99"hasBackground>4,155.903 μs</td>
+<td style="background-color: #BDFF99"hasBackground>303.40 μs</td>
+<td style="background-color: #D0FF99"hasBackground>494.140 μs</td>
+<td style="background-color: #C0FF99"hasBackground>299.38 μs</td>
+<td style="background-color: #D0FF99"hasBackground>486.520 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,429.0 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,526.199 μs</td>
+<td style="background-color: #F2FF99"hasBackground>4,477.8 μs</td>
+<td style="background-color: #F2FF99"hasBackground>4,659.316 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedList</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #D4FF99">245.120 μs</td>
-<td style="background-color: #F1FF99">4,363.556 μs</td>
-<td style="background-color: #E2FF99">662.24 μs</td>
-<td style="background-color: #E0FF99">684.466 μs</td>
-<td style="background-color: #D4FF99">460.78 μs</td>
-<td style="background-color: #E0FF99">681.867 μs</td>
-<td style="background-color: #FBFF99">5,475.3 μs</td>
-<td style="background-color: #F5FF99">4,975.379 μs</td>
-<td style="background-color: #F8FF99">5,151.8 μs</td>
-<td style="background-color: #F7FF99">5,177.425 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #D4FF99"hasBackground>245.120 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,363.556 μs</td>
+<td style="background-color: #E2FF99"hasBackground>662.24 μs</td>
+<td style="background-color: #E0FF99"hasBackground>684.466 μs</td>
+<td style="background-color: #D4FF99"hasBackground>460.78 μs</td>
+<td style="background-color: #E0FF99"hasBackground>681.867 μs</td>
+<td style="background-color: #FBFF99"hasBackground>5,475.3 μs</td>
+<td style="background-color: #F5FF99"hasBackground>4,975.379 μs</td>
+<td style="background-color: #F8FF99"hasBackground>5,151.8 μs</td>
+<td style="background-color: #F7FF99"hasBackground>5,177.425 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList (Sorted)</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #E8FF99">366.517 μs</td>
-<td style="background-color: #EFFF99">4,170.982 μs</td>
-<td style="background-color: #D8FF99">549.61 μs</td>
-<td style="background-color: #EDFF99">888.906 μs</td>
-<td style="background-color: #DAFF99">518.67 μs</td>
-<td style="background-color: #EEFF99">897.213 μs</td>
-<td style="background-color: #F4FF99">4,647.5 μs</td>
-<td style="background-color: #F1FF99">4,585.707 μs</td>
-<td style="background-color: #F2FF99">4,512.7 μs</td>
-<td style="background-color: #F1FF99">4,591.297 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #E8FF99"hasBackground>366.517 μs</td>
+<td style="background-color: #EFFF99"hasBackground>4,170.982 μs</td>
+<td style="background-color: #D8FF99"hasBackground>549.61 μs</td>
+<td style="background-color: #EDFF99"hasBackground>888.906 μs</td>
+<td style="background-color: #DAFF99"hasBackground>518.67 μs</td>
+<td style="background-color: #EEFF99"hasBackground>897.213 μs</td>
+<td style="background-color: #F4FF99"hasBackground>4,647.5 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,585.707 μs</td>
+<td style="background-color: #F2FF99"hasBackground>4,512.7 μs</td>
+<td style="background-color: #F1FF99"hasBackground>4,591.297 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenSet</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #EDFF99">399.679 μs</td>
-<td style="background-color: #C1FF99">1,549.158 μs</td>
-<td style="background-color: #F3FF99">913.03 μs</td>
-<td style="background-color: #E1FF99">698.686 μs</td>
-<td style="background-color: #E3FF99">606.19 μs</td>
-<td style="background-color: #E3FF99">729.071 μs</td>
-<td style="background-color: #CCFF99">2,089.5 μs</td>
-<td style="background-color: #BDFF99">1,398.326 μs</td>
-<td style="background-color: #BEFF99">1,470.0 μs</td>
-<td style="background-color: #BDFF99">1,409.665 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #EDFF99"hasBackground>399.679 μs</td>
+<td style="background-color: #C1FF99"hasBackground>1,549.158 μs</td>
+<td style="background-color: #F3FF99"hasBackground>913.03 μs</td>
+<td style="background-color: #E1FF99"hasBackground>698.686 μs</td>
+<td style="background-color: #E3FF99"hasBackground>606.19 μs</td>
+<td style="background-color: #E3FF99"hasBackground>729.071 μs</td>
+<td style="background-color: #CCFF99"hasBackground>2,089.5 μs</td>
+<td style="background-color: #BDFF99"hasBackground>1,398.326 μs</td>
+<td style="background-color: #BEFF99"hasBackground>1,470.0 μs</td>
+<td style="background-color: #BDFF99"hasBackground>1,409.665 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenDictionary</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #F1FF99">436.484 μs</td>
-<td style="background-color: #BFFF99">1,441.103 μs</td>
-<td style="background-color: #F1FF99">869.17 μs</td>
-<td style="background-color: #E9FF99">819.518 μs</td>
-<td style="background-color: #E4FF99">619.25 μs</td>
-<td style="background-color: #EBFF99">839.095 μs</td>
-<td style="background-color: #CCFF99">2,094.7 μs</td>
-<td style="background-color: #BEFF99">1,458.341 μs</td>
-<td style="background-color: #BFFF99">1,511.2 μs</td>
-<td style="background-color: #BFFF99">1,516.703 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #F1FF99"hasBackground>436.484 μs</td>
+<td style="background-color: #BFFF99"hasBackground>1,441.103 μs</td>
+<td style="background-color: #F1FF99"hasBackground>869.17 μs</td>
+<td style="background-color: #E9FF99"hasBackground>819.518 μs</td>
+<td style="background-color: #E4FF99"hasBackground>619.25 μs</td>
+<td style="background-color: #EBFF99"hasBackground>839.095 μs</td>
+<td style="background-color: #CCFF99"hasBackground>2,094.7 μs</td>
+<td style="background-color: #BEFF99"hasBackground>1,458.341 μs</td>
+<td style="background-color: #BFFF99"hasBackground>1,511.2 μs</td>
+<td style="background-color: #BFFF99"hasBackground>1,516.703 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedDictionary</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFFB99">743.652 μs</td>
-<td style="background-color: #FFFB99">7,403.146 μs</td>
-<td style="background-color: #FBFF99">1,104.86 μs</td>
-<td style="background-color: #FFF199">1,907.664 μs</td>
-<td style="background-color: #FBFF99">997.43 μs</td>
-<td style="background-color: #FFEE99">1,958.208 μs</td>
-<td style="background-color: #FFF899">7,726.8 μs</td>
-<td style="background-color: #FFFB99">7,861.160 μs</td>
-<td style="background-color: #FFFB99">7,489.4 μs</td>
-<td style="background-color: #FFF999">7,981.768 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFFB99"hasBackground>743.652 μs</td>
+<td style="background-color: #FFFB99"hasBackground>7,403.146 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,104.86 μs</td>
+<td style="background-color: #FFF199"hasBackground>1,907.664 μs</td>
+<td style="background-color: #FBFF99"hasBackground>997.43 μs</td>
+<td style="background-color: #FFEE99"hasBackground>1,958.208 μs</td>
+<td style="background-color: #FFF899"hasBackground>7,726.8 μs</td>
+<td style="background-color: #FFFB99"hasBackground>7,861.160 μs</td>
+<td style="background-color: #FFFB99"hasBackground>7,489.4 μs</td>
+<td style="background-color: #FFF999"hasBackground>7,981.768 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableHashSet</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFE199">1,035.964 μs</td>
-<td style="background-color: #D9FF99">2,709.511 μs</td>
-<td style="background-color: #FFB999">2,540.53 μs</td>
-<td style="background-color: #FFCF99">2,616.598 μs</td>
-<td style="background-color: #FFBD99">2,246.62 μs</td>
-<td style="background-color: #FFCD99">2,628.180 μs</td>
-<td style="background-color: #E2FF99">3,264.9 μs</td>
-<td style="background-color: #DCFF99">2,983.712 μs</td>
-<td style="background-color: #DAFF99">2,820.3 μs</td>
-<td style="background-color: #DBFF99">2,972.986 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFE199"hasBackground>1,035.964 μs</td>
+<td style="background-color: #D9FF99"hasBackground>2,709.511 μs</td>
+<td style="background-color: #FFB999"hasBackground>2,540.53 μs</td>
+<td style="background-color: #FFCF99"hasBackground>2,616.598 μs</td>
+<td style="background-color: #FFBD99"hasBackground>2,246.62 μs</td>
+<td style="background-color: #FFCD99"hasBackground>2,628.180 μs</td>
+<td style="background-color: #E2FF99"hasBackground>3,264.9 μs</td>
+<td style="background-color: #DCFF99"hasBackground>2,983.712 μs</td>
+<td style="background-color: #DAFF99"hasBackground>2,820.3 μs</td>
+<td style="background-color: #DBFF99"hasBackground>2,972.986 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedDictionary</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFE099">1,045.619 μs</td>
-<td style="background-color: #FF9999">13,859.086 μs</td>
-<td style="background-color: #FFFD99">1,399.53 μs</td>
-<td style="background-color: #FF9999">3,041.821 μs</td>
-<td style="background-color: #FFF799">1,386.34 μs</td>
-<td style="background-color: #FF9999">3,011.636 μs</td>
-<td style="background-color: #FF9999">13,620.9 μs</td>
-<td style="background-color: #FF9999">14,449.871 μs</td>
-<td style="background-color: #FF9999">13,689.5 μs</td>
-<td style="background-color: #FF9999">14,415.510 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFE099"hasBackground>1,045.619 μs</td>
+<td style="background-color: #FF9999"hasBackground>13,859.086 μs</td>
+<td style="background-color: #FFFD99"hasBackground>1,399.53 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,041.821 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,386.34 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,011.636 μs</td>
+<td style="background-color: #FF9999"hasBackground>13,620.9 μs</td>
+<td style="background-color: #FF9999"hasBackground>14,449.871 μs</td>
+<td style="background-color: #FF9999"hasBackground>13,689.5 μs</td>
+<td style="background-color: #FF9999"hasBackground>14,415.510 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableDictionary</td>
-<td style="background-color: #CCFFFF">10000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FF9999">1,381.476 μs</td>
-<td style="background-color: #DBFF99">2,794.094 μs</td>
-<td style="background-color: #FF9999">2,666.65 μs</td>
-<td style="background-color: #FFBF99">2,828.422 μs</td>
-<td style="background-color: #FF9999">2,392.36 μs</td>
-<td style="background-color: #FFC699">2,717.978 μs</td>
-<td style="background-color: #EFFF99">4,178.5 μs</td>
-<td style="background-color: #DFFF99">3,206.907 μs</td>
-<td style="background-color: #DFFF99">3,143.3 μs</td>
-<td style="background-color: #DEFF99">3,101.142 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>10000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FF9999"hasBackground>1,381.476 μs</td>
+<td style="background-color: #DBFF99"hasBackground>2,794.094 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,666.65 μs</td>
+<td style="background-color: #FFBF99"hasBackground>2,828.422 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,392.36 μs</td>
+<td style="background-color: #FFC699"hasBackground>2,717.978 μs</td>
+<td style="background-color: #EFFF99"hasBackground>4,178.5 μs</td>
+<td style="background-color: #DFFF99"hasBackground>3,206.907 μs</td>
+<td style="background-color: #DFFF99"hasBackground>3,143.3 μs</td>
+<td style="background-color: #DEFF99"hasBackground>3,101.142 μs</td>
 </tr>
 </tbody>
 </table>
@@ -727,333 +776,333 @@ WarmupCount=3
 <tbody>
 <tr>
 <td style="text-align: left">ReadOnlyCollection</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99"><strong>504.324 μs</strong></td>
-<td style="background-color: #99FF99">2,472.077 μs</td>
-<td style="background-color: #99FF99">3,355.06 μs</td>
-<td style="background-color: #99FF99">1,952.889 μs</td>
-<td style="background-color: #99FF99"><strong>3,348.69 μs</strong></td>
-<td style="background-color: #99FF99">1,980.965 μs</td>
-<td style="background-color: #99FF99">9,988.4 μs</td>
-<td style="background-color: #99FF99">3,311.382 μs</td>
-<td style="background-color: #99FF99">9,307.7 μs</td>
-<td style="background-color: #99FF99">3,286.470 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground><strong>504.324 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>2,472.077 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,355.06 μs</td>
+<td style="background-color: #99FF99"hasBackground>1,952.889 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,348.69 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>1,980.965 μs</td>
+<td style="background-color: #99FF99"hasBackground>9,988.4 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,311.382 μs</td>
+<td style="background-color: #99FF99"hasBackground>9,307.7 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,286.470 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Array</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99">515.856 μs</td>
-<td style="background-color: #99FF99"><strong>1,746.981 μs</strong></td>
-<td style="background-color: #99FF99">3,279.49 μs</td>
-<td style="background-color: #99FF99"><strong>1,685.417 μs</strong></td>
-<td style="background-color: #99FF99">3,361.73 μs</td>
-<td style="background-color: #99FF99"><strong>1,699.744 μs</strong></td>
-<td style="background-color: #99FF99"><strong>9,537.0 μs</strong></td>
-<td style="background-color: #99FF99"><strong>3,268.163 μs</strong></td>
-<td style="background-color: #99FF99">9,510.5 μs</td>
-<td style="background-color: #99FF99">3,307.651 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground>515.856 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>1,746.981 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,279.49 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>1,685.417 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,361.73 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>1,699.744 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>9,537.0 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground><strong>3,268.163 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>9,510.5 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,307.651 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99">516.147 μs</td>
-<td style="background-color: #99FF99">1,772.569 μs</td>
-<td style="background-color: #99FF99"><strong>3,273.59 μs</strong></td>
-<td style="background-color: #99FF99">1,698.699 μs</td>
-<td style="background-color: #99FF99">3,440.68 μs</td>
-<td style="background-color: #99FF99">1,701.287 μs</td>
-<td style="background-color: #99FF99">10,483.7 μs</td>
-<td style="background-color: #99FF99">3,272.491 μs</td>
-<td style="background-color: #99FF99">9,444.1 μs</td>
-<td style="background-color: #99FF99"><strong>3,282.731 μs</strong></td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground>516.147 μs</td>
+<td style="background-color: #99FF99"hasBackground>1,772.569 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,273.59 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>1,698.699 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,440.68 μs</td>
+<td style="background-color: #99FF99"hasBackground>1,701.287 μs</td>
+<td style="background-color: #99FF99"hasBackground>10,483.7 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,272.491 μs</td>
+<td style="background-color: #99FF99"hasBackground>9,444.1 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,282.731 μs</strong></td>
 </tr>
 <tr>
 <td style="text-align: left">List</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #99FF99">529.806 μs</td>
-<td style="background-color: #99FF99">2,453.267 μs</td>
-<td style="background-color: #99FF99">3,385.21 μs</td>
-<td style="background-color: #99FF99">1,914.800 μs</td>
-<td style="background-color: #99FF99">3,351.13 μs</td>
-<td style="background-color: #99FF99">1,925.687 μs</td>
-<td style="background-color: #99FF99">10,443.0 μs</td>
-<td style="background-color: #99FF99">3,284.328 μs</td>
-<td style="background-color: #99FF99"><strong>9,259.2 μs</strong></td>
-<td style="background-color: #99FF99">3,298.947 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #99FF99"hasBackground>529.806 μs</td>
+<td style="background-color: #99FF99"hasBackground>2,453.267 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,385.21 μs</td>
+<td style="background-color: #99FF99"hasBackground>1,914.800 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,351.13 μs</td>
+<td style="background-color: #99FF99"hasBackground>1,925.687 μs</td>
+<td style="background-color: #99FF99"hasBackground>10,443.0 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,284.328 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>9,259.2 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,298.947 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Dictionary</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #A5FF99">31,995.977 μs</td>
-<td style="background-color: #9FFF99">61,127.048 μs</td>
-<td style="background-color: #B1FF99">95,366.36 μs</td>
-<td style="background-color: #A7FF99">60,327.741 μs</td>
-<td style="background-color: #AFFF99">86,209.48 μs</td>
-<td style="background-color: #A7FF99">60,767.570 μs</td>
-<td style="background-color: #A8FF99">169,128.5 μs</td>
-<td style="background-color: #A5FF99">111,899.153 μs</td>
-<td style="background-color: #A5FF99">134,952.6 μs</td>
-<td style="background-color: #A4FF99">111,311.340 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #A5FF99"hasBackground>31,995.977 μs</td>
+<td style="background-color: #9FFF99"hasBackground>61,127.048 μs</td>
+<td style="background-color: #B1FF99"hasBackground>95,366.36 μs</td>
+<td style="background-color: #A7FF99"hasBackground>60,327.741 μs</td>
+<td style="background-color: #AFFF99"hasBackground>86,209.48 μs</td>
+<td style="background-color: #A7FF99"hasBackground>60,767.570 μs</td>
+<td style="background-color: #A8FF99"hasBackground>169,128.5 μs</td>
+<td style="background-color: #A5FF99"hasBackground>111,899.153 μs</td>
+<td style="background-color: #A5FF99"hasBackground>134,952.6 μs</td>
+<td style="background-color: #A4FF99"hasBackground>111,311.340 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ReadOnlyDictionary</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #A6FF99">32,691.544 μs</td>
-<td style="background-color: #A0FF99">61,574.407 μs</td>
-<td style="background-color: #B2FF99">98,468.03 μs</td>
-<td style="background-color: #A7FF99">62,046.867 μs</td>
-<td style="background-color: #AEFF99">82,703.11 μs</td>
-<td style="background-color: #A7FF99">60,075.867 μs</td>
-<td style="background-color: #A8FF99">169,061.4 μs</td>
-<td style="background-color: #A4FF99">110,552.000 μs</td>
-<td style="background-color: #A5FF99">131,012.5 μs</td>
-<td style="background-color: #A4FF99">111,836.913 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #A6FF99"hasBackground>32,691.544 μs</td>
+<td style="background-color: #A0FF99"hasBackground>61,574.407 μs</td>
+<td style="background-color: #B2FF99"hasBackground>98,468.03 μs</td>
+<td style="background-color: #A7FF99"hasBackground>62,046.867 μs</td>
+<td style="background-color: #AEFF99"hasBackground>82,703.11 μs</td>
+<td style="background-color: #A7FF99"hasBackground>60,075.867 μs</td>
+<td style="background-color: #A8FF99"hasBackground>169,061.4 μs</td>
+<td style="background-color: #A4FF99"hasBackground>110,552.000 μs</td>
+<td style="background-color: #A5FF99"hasBackground>131,012.5 μs</td>
+<td style="background-color: #A4FF99"hasBackground>111,836.913 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">HashSet</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #A6FF99">33,712.833 μs</td>
-<td style="background-color: #9FFF99">54,896.483 μs</td>
-<td style="background-color: #B0FF99">92,534.76 μs</td>
-<td style="background-color: #A5FF99">54,644.158 μs</td>
-<td style="background-color: #A7FF99">55,756.19 μs</td>
-<td style="background-color: #A5FF99">54,258.454 μs</td>
-<td style="background-color: #A8FF99">166,453.3 μs</td>
-<td style="background-color: #A5FF99">114,099.520 μs</td>
-<td style="background-color: #A4FF99">125,852.4 μs</td>
-<td style="background-color: #A5FF99">118,752.847 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #A6FF99"hasBackground>33,712.833 μs</td>
+<td style="background-color: #9FFF99"hasBackground>54,896.483 μs</td>
+<td style="background-color: #B0FF99"hasBackground>92,534.76 μs</td>
+<td style="background-color: #A5FF99"hasBackground>54,644.158 μs</td>
+<td style="background-color: #A7FF99"hasBackground>55,756.19 μs</td>
+<td style="background-color: #A5FF99"hasBackground>54,258.454 μs</td>
+<td style="background-color: #A8FF99"hasBackground>166,453.3 μs</td>
+<td style="background-color: #A5FF99"hasBackground>114,099.520 μs</td>
+<td style="background-color: #A4FF99"hasBackground>125,852.4 μs</td>
+<td style="background-color: #A5FF99"hasBackground>118,752.847 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">List (Sorted)</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #ADFF99">51,104.713 μs</td>
-<td style="background-color: #F7FF99">1,272,296.833 μs</td>
-<td style="background-color: #ABFF99">69,169.95 μs</td>
-<td style="background-color: #C7FF99">220,972.511 μs</td>
-<td style="background-color: #ABFF99">68,037.01 μs</td>
-<td style="background-color: #C5FF99">207,235.722 μs</td>
-<td style="background-color: #F7FF99">1,510,138.4 μs</td>
-<td style="background-color: #FDFF99">1,597,649.833 μs</td>
-<td style="background-color: #F9FF99">1,551,474.3 μs</td>
-<td style="background-color: #FDFF99">1,692,189.200 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #ADFF99"hasBackground>51,104.713 μs</td>
+<td style="background-color: #F7FF99"hasBackground>1,272,296.833 μs</td>
+<td style="background-color: #ABFF99"hasBackground>69,169.95 μs</td>
+<td style="background-color: #C7FF99"hasBackground>220,972.511 μs</td>
+<td style="background-color: #ABFF99"hasBackground>68,037.01 μs</td>
+<td style="background-color: #C5FF99"hasBackground>207,235.722 μs</td>
+<td style="background-color: #F7FF99"hasBackground>1,510,138.4 μs</td>
+<td style="background-color: #FDFF99"hasBackground>1,597,649.833 μs</td>
+<td style="background-color: #F9FF99"hasBackground>1,551,474.3 μs</td>
+<td style="background-color: #FDFF99"hasBackground>1,692,189.200 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Array (Sorted)</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #ADFF99">51,494.177 μs</td>
-<td style="background-color: #F7FF99">1,261,504.233 μs</td>
-<td style="background-color: #ABFF99">69,460.58 μs</td>
-<td style="background-color: #C3FF99">197,477.022 μs</td>
-<td style="background-color: #ABFF99">69,650.39 μs</td>
-<td style="background-color: #C3FF99">194,178.900 μs</td>
-<td style="background-color: #F9FF99">1,561,056.7 μs</td>
-<td style="background-color: #FCFF99">1,563,808.800 μs</td>
-<td style="background-color: #F8FF99">1,507,109.5 μs</td>
-<td style="background-color: #FDFF99">1,723,026.467 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #ADFF99"hasBackground>51,494.177 μs</td>
+<td style="background-color: #F7FF99"hasBackground>1,261,504.233 μs</td>
+<td style="background-color: #ABFF99"hasBackground>69,460.58 μs</td>
+<td style="background-color: #C3FF99"hasBackground>197,477.022 μs</td>
+<td style="background-color: #ABFF99"hasBackground>69,650.39 μs</td>
+<td style="background-color: #C3FF99"hasBackground>194,178.900 μs</td>
+<td style="background-color: #F9FF99"hasBackground>1,561,056.7 μs</td>
+<td style="background-color: #FCFF99"hasBackground>1,563,808.800 μs</td>
+<td style="background-color: #F8FF99"hasBackground>1,507,109.5 μs</td>
+<td style="background-color: #FDFF99"hasBackground>1,723,026.467 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray (Sorted)</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #ADFF99">51,958.013 μs</td>
-<td style="background-color: #F7FF99">1,254,252.433 μs</td>
-<td style="background-color: #AAFF99">68,780.38 μs</td>
-<td style="background-color: #C3FF99">194,048.133 μs</td>
-<td style="background-color: #ABFF99">71,666.14 μs</td>
-<td style="background-color: #C5FF99">208,567.000 μs</td>
-<td style="background-color: #F8FF99">1,537,310.0 μs</td>
-<td style="background-color: #FDFF99">1,567,698.933 μs</td>
-<td style="background-color: #F8FF99">1,508,957.0 μs</td>
-<td style="background-color: #FDFF99">1,700,343.400 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #ADFF99"hasBackground>51,958.013 μs</td>
+<td style="background-color: #F7FF99"hasBackground>1,254,252.433 μs</td>
+<td style="background-color: #AAFF99"hasBackground>68,780.38 μs</td>
+<td style="background-color: #C3FF99"hasBackground>194,048.133 μs</td>
+<td style="background-color: #ABFF99"hasBackground>71,666.14 μs</td>
+<td style="background-color: #C5FF99"hasBackground>208,567.000 μs</td>
+<td style="background-color: #F8FF99"hasBackground>1,537,310.0 μs</td>
+<td style="background-color: #FDFF99"hasBackground>1,567,698.933 μs</td>
+<td style="background-color: #F8FF99"hasBackground>1,508,957.0 μs</td>
+<td style="background-color: #FDFF99"hasBackground>1,700,343.400 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #B4FF99">70,960.167 μs</td>
-<td style="background-color: #A0FF99">66,808.562 μs</td>
-<td style="background-color: #ADFF99">81,617.96 μs</td>
-<td style="background-color: #A9FF99">71,489.821 μs</td>
-<td style="background-color: #AEFF99">83,067.50 μs</td>
-<td style="background-color: #A9FF99">71,283.192 μs</td>
-<td style="background-color: #A0FF99">86,172.9 μs</td>
-<td style="background-color: #9FFF99">57,231.215 μs</td>
-<td style="background-color: #A0FF99">82,798.1 μs</td>
-<td style="background-color: #9EFF99">56,876.248 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #B4FF99"hasBackground>70,960.167 μs</td>
+<td style="background-color: #A0FF99"hasBackground>66,808.562 μs</td>
+<td style="background-color: #ADFF99"hasBackground>81,617.96 μs</td>
+<td style="background-color: #A9FF99"hasBackground>71,489.821 μs</td>
+<td style="background-color: #AEFF99"hasBackground>83,067.50 μs</td>
+<td style="background-color: #A9FF99"hasBackground>71,283.192 μs</td>
+<td style="background-color: #A0FF99"hasBackground>86,172.9 μs</td>
+<td style="background-color: #9FFF99"hasBackground>57,231.215 μs</td>
+<td style="background-color: #A0FF99"hasBackground>82,798.1 μs</td>
+<td style="background-color: #9EFF99"hasBackground>56,876.248 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">LinkedList</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #B8FF99">82,392.728 μs</td>
-<td style="background-color: #A2FF99">84,810.195 μs</td>
-<td style="background-color: #B1FF99">94,274.66 μs</td>
-<td style="background-color: #ADFF99">90,952.739 μs</td>
-<td style="background-color: #B1FF99">96,208.36 μs</td>
-<td style="background-color: #ADFF99">89,269.006 μs</td>
-<td style="background-color: #A0FF99">83,882.4 μs</td>
-<td style="background-color: #A1FF99">78,025.738 μs</td>
-<td style="background-color: #A0FF99">82,806.8 μs</td>
-<td style="background-color: #A1FF99">77,498.105 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #B8FF99"hasBackground>82,392.728 μs</td>
+<td style="background-color: #A2FF99"hasBackground>84,810.195 μs</td>
+<td style="background-color: #B1FF99"hasBackground>94,274.66 μs</td>
+<td style="background-color: #ADFF99"hasBackground>90,952.739 μs</td>
+<td style="background-color: #B1FF99"hasBackground>96,208.36 μs</td>
+<td style="background-color: #ADFF99"hasBackground>89,269.006 μs</td>
+<td style="background-color: #A0FF99"hasBackground>83,882.4 μs</td>
+<td style="background-color: #A1FF99"hasBackground>78,025.738 μs</td>
+<td style="background-color: #A0FF99"hasBackground>82,806.8 μs</td>
+<td style="background-color: #A1FF99"hasBackground>77,498.105 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedList</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #C2FF99">113,853.193 μs</td>
-<td style="background-color: #FCFF99">1,480,264.133 μs</td>
-<td style="background-color: #C7FF99">193,554.06 μs</td>
-<td style="background-color: #D5FF99">301,168.667 μs</td>
-<td style="background-color: #C6FF99">183,632.01 μs</td>
-<td style="background-color: #D6FF99">306,761.850 μs</td>
-<td style="background-color: #FEFF99">1,878,580.4 μs</td>
-<td style="background-color: #FFFE99">1,886,570.833 μs</td>
-<td style="background-color: #FEFF99">1,826,587.8 μs</td>
-<td style="background-color: #FFFD99">2,043,428.367 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #C2FF99"hasBackground>113,853.193 μs</td>
+<td style="background-color: #FCFF99"hasBackground>1,480,264.133 μs</td>
+<td style="background-color: #C7FF99"hasBackground>193,554.06 μs</td>
+<td style="background-color: #D5FF99"hasBackground>301,168.667 μs</td>
+<td style="background-color: #C6FF99"hasBackground>183,632.01 μs</td>
+<td style="background-color: #D6FF99"hasBackground>306,761.850 μs</td>
+<td style="background-color: #FEFF99"hasBackground>1,878,580.4 μs</td>
+<td style="background-color: #FFFE99"hasBackground>1,886,570.833 μs</td>
+<td style="background-color: #FEFF99"hasBackground>1,826,587.8 μs</td>
+<td style="background-color: #FFFD99"hasBackground>2,043,428.367 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedSet</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #C5FF99">123,215.547 μs</td>
-<td style="background-color: #FBFF99">1,421,397.567 μs</td>
-<td style="background-color: #BEFF99">152,350.92 μs</td>
-<td style="background-color: #D7FF99">314,867.617 μs</td>
-<td style="background-color: #BFFF99">152,072.15 μs</td>
-<td style="background-color: #D9FF99">324,018.883 μs</td>
-<td style="background-color: #FCFF99">1,749,357.3 μs</td>
-<td style="background-color: #FFFF99">1,804,288.267 μs</td>
-<td style="background-color: #FCFF99">1,706,557.2 μs</td>
-<td style="background-color: #FFFF99">1,946,018.867 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #C5FF99"hasBackground>123,215.547 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,421,397.567 μs</td>
+<td style="background-color: #BEFF99"hasBackground>152,350.92 μs</td>
+<td style="background-color: #D7FF99"hasBackground>314,867.617 μs</td>
+<td style="background-color: #BFFF99"hasBackground>152,072.15 μs</td>
+<td style="background-color: #D9FF99"hasBackground>324,018.883 μs</td>
+<td style="background-color: #FCFF99"hasBackground>1,749,357.3 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,804,288.267 μs</td>
+<td style="background-color: #FCFF99"hasBackground>1,706,557.2 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,946,018.867 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenDictionary</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #C6FF99">125,824.411 μs</td>
-<td style="background-color: #D4FF99">618,932.333 μs</td>
-<td style="background-color: #CBFF99">211,491.02 μs</td>
-<td style="background-color: #BCFF99">161,481.422 μs</td>
-<td style="background-color: #C4FF99">176,315.19 μs</td>
-<td style="background-color: #BFFF99">175,977.083 μs</td>
-<td style="background-color: #B7FF99">336,933.9 μs</td>
-<td style="background-color: #B3FF99">262,421.450 μs</td>
-<td style="background-color: #B3FF99">283,767.8 μs</td>
-<td style="background-color: #B3FF99">265,990.750 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #C6FF99"hasBackground>125,824.411 μs</td>
+<td style="background-color: #D4FF99"hasBackground>618,932.333 μs</td>
+<td style="background-color: #CBFF99"hasBackground>211,491.02 μs</td>
+<td style="background-color: #BCFF99"hasBackground>161,481.422 μs</td>
+<td style="background-color: #C4FF99"hasBackground>176,315.19 μs</td>
+<td style="background-color: #BFFF99"hasBackground>175,977.083 μs</td>
+<td style="background-color: #B7FF99"hasBackground>336,933.9 μs</td>
+<td style="background-color: #B3FF99"hasBackground>262,421.450 μs</td>
+<td style="background-color: #B3FF99"hasBackground>283,767.8 μs</td>
+<td style="background-color: #B3FF99"hasBackground>265,990.750 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedSet</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #C8FF99">132,993.567 μs</td>
-<td style="background-color: #FBFF99">1,412,164.933 μs</td>
-<td style="background-color: #C1FF99">162,289.78 μs</td>
-<td style="background-color: #D7FF99">315,448.083 μs</td>
-<td style="background-color: #C1FF99">160,096.23 μs</td>
-<td style="background-color: #D7FF99">315,208.317 μs</td>
-<td style="background-color: #FBFF99">1,702,656.9 μs</td>
-<td style="background-color: #FFFF99">1,777,829.900 μs</td>
-<td style="background-color: #FCFF99">1,724,518.4 μs</td>
-<td style="background-color: #FFFF99">1,930,465.767 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #C8FF99"hasBackground>132,993.567 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,412,164.933 μs</td>
+<td style="background-color: #C1FF99"hasBackground>162,289.78 μs</td>
+<td style="background-color: #D7FF99"hasBackground>315,448.083 μs</td>
+<td style="background-color: #C1FF99"hasBackground>160,096.23 μs</td>
+<td style="background-color: #D7FF99"hasBackground>315,208.317 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,702,656.9 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,777,829.900 μs</td>
+<td style="background-color: #FCFF99"hasBackground>1,724,518.4 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,930,465.767 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenSet</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #CAFF99">139,661.489 μs</td>
-<td style="background-color: #D5FF99">625,179.800 μs</td>
-<td style="background-color: #C9FF99">200,634.72 μs</td>
-<td style="background-color: #BFFF99">175,773.058 μs</td>
-<td style="background-color: #C1FF99">161,055.81 μs</td>
-<td style="background-color: #BFFF99">178,048.511 μs</td>
-<td style="background-color: #B8FF99">352,984.7 μs</td>
-<td style="background-color: #B2FF99">245,707.167 μs</td>
-<td style="background-color: #B2FF99">274,479.2 μs</td>
-<td style="background-color: #B1FF99">247,040.000 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #CAFF99"hasBackground>139,661.489 μs</td>
+<td style="background-color: #D5FF99"hasBackground>625,179.800 μs</td>
+<td style="background-color: #C9FF99"hasBackground>200,634.72 μs</td>
+<td style="background-color: #BFFF99"hasBackground>175,773.058 μs</td>
+<td style="background-color: #C1FF99"hasBackground>161,055.81 μs</td>
+<td style="background-color: #BFFF99"hasBackground>178,048.511 μs</td>
+<td style="background-color: #B8FF99"hasBackground>352,984.7 μs</td>
+<td style="background-color: #B2FF99"hasBackground>245,707.167 μs</td>
+<td style="background-color: #B2FF99"hasBackground>274,479.2 μs</td>
+<td style="background-color: #B1FF99"hasBackground>247,040.000 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList (Sorted)</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #E1FF99">225,373.189 μs</td>
-<td style="background-color: #FBFF99">1,440,594.067 μs</td>
-<td style="background-color: #D3FF99">252,204.45 μs</td>
-<td style="background-color: #E0FF99">378,184.633 μs</td>
-<td style="background-color: #D2FF99">246,561.13 μs</td>
-<td style="background-color: #E0FF99">373,668.200 μs</td>
-<td style="background-color: #FBFF99">1,698,900.6 μs</td>
-<td style="background-color: #FEFF99">1,667,373.167 μs</td>
-<td style="background-color: #FBFF99">1,657,942.0 μs</td>
-<td style="background-color: #FEFF99">1,809,876.100 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #E1FF99"hasBackground>225,373.189 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,440,594.067 μs</td>
+<td style="background-color: #D3FF99"hasBackground>252,204.45 μs</td>
+<td style="background-color: #E0FF99"hasBackground>378,184.633 μs</td>
+<td style="background-color: #D2FF99"hasBackground>246,561.13 μs</td>
+<td style="background-color: #E0FF99"hasBackground>373,668.200 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,698,900.6 μs</td>
+<td style="background-color: #FEFF99"hasBackground>1,667,373.167 μs</td>
+<td style="background-color: #FBFF99"hasBackground>1,657,942.0 μs</td>
+<td style="background-color: #FEFF99"hasBackground>1,809,876.100 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedDictionary</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FFF299">609,980.667 μs</td>
-<td style="background-color: #FFF399">2,126,734.967 μs</td>
-<td style="background-color: #FFFE99">739,231.10 μs</td>
-<td style="background-color: #FFEF99">1,067,929.233 μs</td>
-<td style="background-color: #FFFD99">745,543.80 μs</td>
-<td style="background-color: #FFED99">1,093,100.200 μs</td>
-<td style="background-color: #FFF999">2,303,442.4 μs</td>
-<td style="background-color: #FFEE99">2,417,957.433 μs</td>
-<td style="background-color: #FFF899">2,305,865.1 μs</td>
-<td style="background-color: #FFEE99">2,546,313.000 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FFF299"hasBackground>609,980.667 μs</td>
+<td style="background-color: #FFF399"hasBackground>2,126,734.967 μs</td>
+<td style="background-color: #FFFE99"hasBackground>739,231.10 μs</td>
+<td style="background-color: #FFEF99"hasBackground>1,067,929.233 μs</td>
+<td style="background-color: #FFFD99"hasBackground>745,543.80 μs</td>
+<td style="background-color: #FFED99"hasBackground>1,093,100.200 μs</td>
+<td style="background-color: #FFF999"hasBackground>2,303,442.4 μs</td>
+<td style="background-color: #FFEE99"hasBackground>2,417,957.433 μs</td>
+<td style="background-color: #FFF899"hasBackground>2,305,865.1 μs</td>
+<td style="background-color: #FFEE99"hasBackground>2,546,313.000 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableHashSet</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FFB899">940,782.600 μs</td>
-<td style="background-color: #EEFF99">1,050,838.967 μs</td>
-<td style="background-color: #FFC199">1,345,858.57 μs</td>
-<td style="background-color: #FFE999">1,155,167.933 μs</td>
-<td style="background-color: #FFE099">1,088,117.17 μs</td>
-<td style="background-color: #FFF099">1,062,482.900 μs</td>
-<td style="background-color: #F7FF99">1,510,336.7 μs</td>
-<td style="background-color: #EFFF99">1,115,422.667 μs</td>
-<td style="background-color: #EBFF99">1,145,315.5 μs</td>
-<td style="background-color: #EEFF99">1,160,763.567 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FFB899"hasBackground>940,782.600 μs</td>
+<td style="background-color: #EEFF99"hasBackground>1,050,838.967 μs</td>
+<td style="background-color: #FFC199"hasBackground>1,345,858.57 μs</td>
+<td style="background-color: #FFE999"hasBackground>1,155,167.933 μs</td>
+<td style="background-color: #FFE099"hasBackground>1,088,117.17 μs</td>
+<td style="background-color: #FFF099"hasBackground>1,062,482.900 μs</td>
+<td style="background-color: #F7FF99"hasBackground>1,510,336.7 μs</td>
+<td style="background-color: #EFFF99"hasBackground>1,115,422.667 μs</td>
+<td style="background-color: #EBFF99"hasBackground>1,145,315.5 μs</td>
+<td style="background-color: #EEFF99"hasBackground>1,160,763.567 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedDictionary</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FFAC99">968,602.200 μs</td>
-<td style="background-color: #FF9999">3,508,576.867 μs</td>
-<td style="background-color: #FF9999">1,457,313.17 μs</td>
-<td style="background-color: #FF9999">1,667,027.167 μs</td>
-<td style="background-color: #FF9999">1,434,820.20 μs</td>
-<td style="background-color: #FF9999">1,663,175.333 μs</td>
-<td style="background-color: #FF9999">4,135,377.6 μs</td>
-<td style="background-color: #FF9999">3,697,727.067 μs</td>
-<td style="background-color: #FF9999">4,077,824.1 μs</td>
-<td style="background-color: #FF9999">3,897,755.767 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FFAC99"hasBackground>968,602.200 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,508,576.867 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,457,313.17 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,667,027.167 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,434,820.20 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,663,175.333 μs</td>
+<td style="background-color: #FF9999"hasBackground>4,135,377.6 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,697,727.067 μs</td>
+<td style="background-color: #FF9999"hasBackground>4,077,824.1 μs</td>
+<td style="background-color: #FF9999"hasBackground>3,897,755.767 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableDictionary</td>
-<td style="background-color: #FFCCFF">1000000</td>
-<td style="text-align: left;background-color: #FFCCFF">False</td>
-<td style="background-color: #FF9999">985,886.700 μs</td>
-<td style="background-color: #F3FF99">1,168,491.733 μs</td>
-<td style="background-color: #FFBF99">1,354,303.10 μs</td>
-<td style="background-color: #FFEB99">1,123,025.100 μs</td>
-<td style="background-color: #FFE399">1,061,682.70 μs</td>
-<td style="background-color: #FFE799">1,173,974.133 μs</td>
-<td style="background-color: #F9FF99">1,605,377.8 μs</td>
-<td style="background-color: #EFFF99">1,135,339.300 μs</td>
-<td style="background-color: #EEFF99">1,227,295.7 μs</td>
-<td style="background-color: #EEFF99">1,164,108.000 μs</td>
+<td style="background-color: #FFCCFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #FFCCFF"hasBackground>False</td>
+<td style="background-color: #FF9999"hasBackground>985,886.700 μs</td>
+<td style="background-color: #F3FF99"hasBackground>1,168,491.733 μs</td>
+<td style="background-color: #FFBF99"hasBackground>1,354,303.10 μs</td>
+<td style="background-color: #FFEB99"hasBackground>1,123,025.100 μs</td>
+<td style="background-color: #FFE399"hasBackground>1,061,682.70 μs</td>
+<td style="background-color: #FFE799"hasBackground>1,173,974.133 μs</td>
+<td style="background-color: #F9FF99"hasBackground>1,605,377.8 μs</td>
+<td style="background-color: #EFFF99"hasBackground>1,135,339.300 μs</td>
+<td style="background-color: #EEFF99"hasBackground>1,227,295.7 μs</td>
+<td style="background-color: #EEFF99"hasBackground>1,164,108.000 μs</td>
 </tr>
 </tbody>
 </table>
@@ -1066,367 +1115,406 @@ WarmupCount=3
 <tbody>
 <tr>
 <td style="text-align: left">ReadOnlyCollection</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99"><strong>507.657 μs</strong></td>
-<td style="background-color: #99FF99">3,656.048 μs</td>
-<td style="background-color: #99FF99">3,293.87 μs</td>
-<td style="background-color: #99FF99">3,181.845 μs</td>
-<td style="background-color: #99FF99">3,390.67 μs</td>
-<td style="background-color: #99FF99">3,186.602 μs</td>
-<td style="background-color: #99FF99">16,916.9 μs</td>
-<td style="background-color: #99FF99"><strong>5,455.066 μs</strong></td>
-<td style="background-color: #99FF99">16,802.8 μs</td>
-<td style="background-color: #99FF99">5,578.555 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground><strong>507.657 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,656.048 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,293.87 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,181.845 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,390.67 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,186.602 μs</td>
+<td style="background-color: #99FF99"hasBackground>16,916.9 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>5,455.066 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>16,802.8 μs</td>
+<td style="background-color: #99FF99"hasBackground>5,578.555 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Array</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99">517.425 μs</td>
-<td style="background-color: #99FF99"><strong>2,969.073 μs</strong></td>
-<td style="background-color: #99FF99">3,300.02 μs</td>
-<td style="background-color: #99FF99">3,035.039 μs</td>
-<td style="background-color: #99FF99"><strong>3,378.33 μs</strong></td>
-<td style="background-color: #99FF99">3,026.706 μs</td>
-<td style="background-color: #99FF99"><strong>16,601.8 μs</strong></td>
-<td style="background-color: #99FF99">5,476.214 μs</td>
-<td style="background-color: #99FF99"><strong>16,592.8 μs</strong></td>
-<td style="background-color: #99FF99">5,642.840 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground>517.425 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>2,969.073 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,300.02 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,035.039 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,378.33 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,026.706 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>16,601.8 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>5,476.214 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>16,592.8 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>5,642.840 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99">520.356 μs</td>
-<td style="background-color: #99FF99">2,974.764 μs</td>
-<td style="background-color: #99FF99">3,296.75 μs</td>
-<td style="background-color: #99FF99"><strong>3,018.099 μs</strong></td>
-<td style="background-color: #99FF99">3,390.09 μs</td>
-<td style="background-color: #99FF99"><strong>3,015.545 μs</strong></td>
-<td style="background-color: #99FF99">18,501.8 μs</td>
-<td style="background-color: #99FF99">5,477.453 μs</td>
-<td style="background-color: #99FF99">16,688.3 μs</td>
-<td style="background-color: #99FF99">5,580.492 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground>520.356 μs</td>
+<td style="background-color: #99FF99"hasBackground>2,974.764 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,296.75 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,018.099 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,390.09 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,015.545 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>18,501.8 μs</td>
+<td style="background-color: #99FF99"hasBackground>5,477.453 μs</td>
+<td style="background-color: #99FF99"hasBackground>16,688.3 μs</td>
+<td style="background-color: #99FF99"hasBackground>5,580.492 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">List</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #99FF99">533.574 μs</td>
-<td style="background-color: #99FF99">3,629.443 μs</td>
-<td style="background-color: #99FF99"><strong>3,286.39 μs</strong></td>
-<td style="background-color: #99FF99">3,199.480 μs</td>
-<td style="background-color: #99FF99">3,445.90 μs</td>
-<td style="background-color: #99FF99">3,164.733 μs</td>
-<td style="background-color: #99FF99">17,928.5 μs</td>
-<td style="background-color: #99FF99">5,461.394 μs</td>
-<td style="background-color: #99FF99">16,801.9 μs</td>
-<td style="background-color: #99FF99"><strong>5,572.833 μs</strong></td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #99FF99"hasBackground>533.574 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,629.443 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>3,286.39 μs</strong></td>
+<td style="background-color: #99FF99"hasBackground>3,199.480 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,445.90 μs</td>
+<td style="background-color: #99FF99"hasBackground>3,164.733 μs</td>
+<td style="background-color: #99FF99"hasBackground>17,928.5 μs</td>
+<td style="background-color: #99FF99"hasBackground>5,461.394 μs</td>
+<td style="background-color: #99FF99"hasBackground>16,801.9 μs</td>
+<td style="background-color: #99FF99"hasBackground><strong>5,572.833 μs</strong></td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableArray (Sorted)</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #9AFF99">1,201.790 μs</td>
-<td style="background-color: #AFFF99">145,644.625 μs</td>
-<td style="background-color: #99FF99">4,542.70 μs</td>
-<td style="background-color: #A1FF99">28,134.218 μs</td>
-<td style="background-color: #99FF99">4,579.29 μs</td>
-<td style="background-color: #A1FF99">28,134.045 μs</td>
-<td style="background-color: #AFFF99">156,783.3 μs</td>
-<td style="background-color: #B1FF99">164,471.025 μs</td>
-<td style="background-color: #AEFF99">156,884.1 μs</td>
-<td style="background-color: #B3FF99">173,624.989 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #9AFF99"hasBackground>1,201.790 μs</td>
+<td style="background-color: #AFFF99"hasBackground>145,644.625 μs</td>
+<td style="background-color: #99FF99"hasBackground>4,542.70 μs</td>
+<td style="background-color: #A1FF99"hasBackground>28,134.218 μs</td>
+<td style="background-color: #99FF99"hasBackground>4,579.29 μs</td>
+<td style="background-color: #A1FF99"hasBackground>28,134.045 μs</td>
+<td style="background-color: #AFFF99"hasBackground>156,783.3 μs</td>
+<td style="background-color: #B1FF99"hasBackground>164,471.025 μs</td>
+<td style="background-color: #AEFF99"hasBackground>156,884.1 μs</td>
+<td style="background-color: #B3FF99"hasBackground>173,624.989 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Array (Sorted)</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #A0FF99">5,856.667 μs</td>
-<td style="background-color: #FEFF99">1,129,643.800 μs</td>
-<td style="background-color: #9EFF99">21,387.96 μs</td>
-<td style="background-color: #B7FF99">104,549.827 μs</td>
-<td style="background-color: #9EFF99">17,908.28 μs</td>
-<td style="background-color: #B7FF99">104,135.887 μs</td>
-<td style="background-color: #FFFF99">1,222,815.8 μs</td>
-<td style="background-color: #FFFC99">1,316,068.900 μs</td>
-<td style="background-color: #FFFF99">1,239,819.4 μs</td>
-<td style="background-color: #FFF799">1,434,924.700 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #A0FF99"hasBackground>5,856.667 μs</td>
+<td style="background-color: #FEFF99"hasBackground>1,129,643.800 μs</td>
+<td style="background-color: #9EFF99"hasBackground>21,387.96 μs</td>
+<td style="background-color: #B7FF99"hasBackground>104,549.827 μs</td>
+<td style="background-color: #9EFF99"hasBackground>17,908.28 μs</td>
+<td style="background-color: #B7FF99"hasBackground>104,135.887 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,222,815.8 μs</td>
+<td style="background-color: #FFFC99"hasBackground>1,316,068.900 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,239,819.4 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,434,924.700 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">List (Sorted)</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #A0FF99">5,877.452 μs</td>
-<td style="background-color: #FEFF99">1,155,808.467 μs</td>
-<td style="background-color: #9DFF99">18,011.67 μs</td>
-<td style="background-color: #B6FF99">100,802.133 μs</td>
-<td style="background-color: #9FFF99">21,601.00 μs</td>
-<td style="background-color: #B5FF99">99,407.839 μs</td>
-<td style="background-color: #FFFF99">1,213,193.5 μs</td>
-<td style="background-color: #FFFD99">1,293,602.933 μs</td>
-<td style="background-color: #FFFF99">1,227,750.5 μs</td>
-<td style="background-color: #FFF799">1,438,051.333 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #A0FF99"hasBackground>5,877.452 μs</td>
+<td style="background-color: #FEFF99"hasBackground>1,155,808.467 μs</td>
+<td style="background-color: #9DFF99"hasBackground>18,011.67 μs</td>
+<td style="background-color: #B6FF99"hasBackground>100,802.133 μs</td>
+<td style="background-color: #9FFF99"hasBackground>21,601.00 μs</td>
+<td style="background-color: #B5FF99"hasBackground>99,407.839 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,213,193.5 μs</td>
+<td style="background-color: #FFFD99"hasBackground>1,293,602.933 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,227,750.5 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,438,051.333 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">Dictionary</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #C1FF99">32,210.608 μs</td>
-<td style="background-color: #ACFF99">126,735.980 μs</td>
-<td style="background-color: #B2FF99">96,648.89 μs</td>
-<td style="background-color: #BBFF99">120,166.687 μs</td>
-<td style="background-color: #B5FF99">82,675.68 μs</td>
-<td style="background-color: #BBFF99">118,498.060 μs</td>
-<td style="background-color: #C1FF99">281,732.3 μs</td>
-<td style="background-color: #B5FF99">187,881.022 μs</td>
-<td style="background-color: #BFFF99">281,131.2 μs</td>
-<td style="background-color: #B6FF99">197,542.911 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #C1FF99"hasBackground>32,210.608 μs</td>
+<td style="background-color: #ACFF99"hasBackground>126,735.980 μs</td>
+<td style="background-color: #B2FF99"hasBackground>96,648.89 μs</td>
+<td style="background-color: #BBFF99"hasBackground>120,166.687 μs</td>
+<td style="background-color: #B5FF99"hasBackground>82,675.68 μs</td>
+<td style="background-color: #BBFF99"hasBackground>118,498.060 μs</td>
+<td style="background-color: #C1FF99"hasBackground>281,732.3 μs</td>
+<td style="background-color: #B5FF99"hasBackground>187,881.022 μs</td>
+<td style="background-color: #BFFF99"hasBackground>281,131.2 μs</td>
+<td style="background-color: #B6FF99"hasBackground>197,542.911 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ReadOnlyDictionary</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #C3FF99">33,912.242 μs</td>
-<td style="background-color: #ACFF99">128,017.127 μs</td>
-<td style="background-color: #B1FF99">93,465.42 μs</td>
-<td style="background-color: #BCFF99">122,204.400 μs</td>
-<td style="background-color: #B5FF99">82,684.19 μs</td>
-<td style="background-color: #BAFF99">117,655.820 μs</td>
-<td style="background-color: #C0FF99">278,656.2 μs</td>
-<td style="background-color: #B5FF99">189,598.811 μs</td>
-<td style="background-color: #BEFF99">269,814.9 μs</td>
-<td style="background-color: #B5FF99">194,706.833 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #C3FF99"hasBackground>33,912.242 μs</td>
+<td style="background-color: #ACFF99"hasBackground>128,017.127 μs</td>
+<td style="background-color: #B1FF99"hasBackground>93,465.42 μs</td>
+<td style="background-color: #BCFF99"hasBackground>122,204.400 μs</td>
+<td style="background-color: #B5FF99"hasBackground>82,684.19 μs</td>
+<td style="background-color: #BAFF99"hasBackground>117,655.820 μs</td>
+<td style="background-color: #C0FF99"hasBackground>278,656.2 μs</td>
+<td style="background-color: #B5FF99"hasBackground>189,598.811 μs</td>
+<td style="background-color: #BEFF99"hasBackground>269,814.9 μs</td>
+<td style="background-color: #B5FF99"hasBackground>194,706.833 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">HashSet</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #C4FF99">35,300.460 μs</td>
-<td style="background-color: #ADFF99">132,884.167 μs</td>
-<td style="background-color: #B1FF99">92,074.00 μs</td>
-<td style="background-color: #C0FF99">137,878.008 μs</td>
-<td style="background-color: #ACFF99">57,191.87 μs</td>
-<td style="background-color: #C1FF99">143,134.783 μs</td>
-<td style="background-color: #C1FF99">282,177.2 μs</td>
-<td style="background-color: #B5FF99">189,317.022 μs</td>
-<td style="background-color: #B3FF99">190,732.3 μs</td>
-<td style="background-color: #B7FF99">202,440.711 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #C4FF99"hasBackground>35,300.460 μs</td>
+<td style="background-color: #ADFF99"hasBackground>132,884.167 μs</td>
+<td style="background-color: #B1FF99"hasBackground>92,074.00 μs</td>
+<td style="background-color: #C0FF99"hasBackground>137,878.008 μs</td>
+<td style="background-color: #ACFF99"hasBackground>57,191.87 μs</td>
+<td style="background-color: #C1FF99"hasBackground>143,134.783 μs</td>
+<td style="background-color: #C1FF99"hasBackground>282,177.2 μs</td>
+<td style="background-color: #B5FF99"hasBackground>189,317.022 μs</td>
+<td style="background-color: #B3FF99"hasBackground>190,732.3 μs</td>
+<td style="background-color: #B7FF99"hasBackground>202,440.711 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedList</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #D4FF99">51,409.652 μs</td>
-<td style="background-color: #FFF799">1,436,318.133 μs</td>
-<td style="background-color: #B7FF99">117,013.70 μs</td>
-<td style="background-color: #DEFF99">278,611.633 μs</td>
-<td style="background-color: #C0FF99">118,840.49 μs</td>
-<td style="background-color: #DDFF99">276,128.750 μs</td>
-<td style="background-color: #FFEA99">1,676,060.0 μs</td>
-<td style="background-color: #FFE999">1,709,906.733 μs</td>
-<td style="background-color: #FFEE99">1,655,944.9 μs</td>
-<td style="background-color: #FFE399">1,829,603.667 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #D4FF99"hasBackground>51,409.652 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,436,318.133 μs</td>
+<td style="background-color: #B7FF99"hasBackground>117,013.70 μs</td>
+<td style="background-color: #DEFF99"hasBackground>278,611.633 μs</td>
+<td style="background-color: #C0FF99"hasBackground>118,840.49 μs</td>
+<td style="background-color: #DDFF99"hasBackground>276,128.750 μs</td>
+<td style="background-color: #FFEA99"hasBackground>1,676,060.0 μs</td>
+<td style="background-color: #FFE999"hasBackground>1,709,906.733 μs</td>
+<td style="background-color: #FFEE99"hasBackground>1,655,944.9 μs</td>
+<td style="background-color: #FFE399"hasBackground>1,829,603.667 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #E2FF99">67,951.648 μs</td>
-<td style="background-color: #A5FF99">81,748.695 μs</td>
-<td style="background-color: #AFFF99">84,500.11 μs</td>
-<td style="background-color: #B1FF99">81,404.257 μs</td>
-<td style="background-color: #B5FF99">83,139.71 μs</td>
-<td style="background-color: #B1FF99">84,200.256 μs</td>
-<td style="background-color: #A7FF99">102,191.5 μs</td>
-<td style="background-color: #A2FF99">63,083.425 μs</td>
-<td style="background-color: #A6FF99">98,327.3 μs</td>
-<td style="background-color: #A2FF99">62,545.704 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #E2FF99"hasBackground>67,951.648 μs</td>
+<td style="background-color: #A5FF99"hasBackground>81,748.695 μs</td>
+<td style="background-color: #AFFF99"hasBackground>84,500.11 μs</td>
+<td style="background-color: #B1FF99"hasBackground>81,404.257 μs</td>
+<td style="background-color: #B5FF99"hasBackground>83,139.71 μs</td>
+<td style="background-color: #B1FF99"hasBackground>84,200.256 μs</td>
+<td style="background-color: #A7FF99"hasBackground>102,191.5 μs</td>
+<td style="background-color: #A2FF99"hasBackground>63,083.425 μs</td>
+<td style="background-color: #A6FF99"hasBackground>98,327.3 μs</td>
+<td style="background-color: #A2FF99"hasBackground>62,545.704 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedSet</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #E7FF99">75,711.886 μs</td>
-<td style="background-color: #FFFC99">1,319,996.033 μs</td>
-<td style="background-color: #B4FF99">105,094.11 μs</td>
-<td style="background-color: #D4FF99">225,921.800 μs</td>
-<td style="background-color: #BCFF99">107,157.75 μs</td>
-<td style="background-color: #D6FF99">237,027.683 μs</td>
-<td style="background-color: #FFF399">1,489,399.2 μs</td>
-<td style="background-color: #FFF299">1,534,986.133 μs</td>
-<td style="background-color: #FFF799">1,453,673.0 μs</td>
-<td style="background-color: #FFED99">1,644,704.967 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #E7FF99"hasBackground>75,711.886 μs</td>
+<td style="background-color: #FFFC99"hasBackground>1,319,996.033 μs</td>
+<td style="background-color: #B4FF99"hasBackground>105,094.11 μs</td>
+<td style="background-color: #D4FF99"hasBackground>225,921.800 μs</td>
+<td style="background-color: #BCFF99"hasBackground>107,157.75 μs</td>
+<td style="background-color: #D6FF99"hasBackground>237,027.683 μs</td>
+<td style="background-color: #FFF399"hasBackground>1,489,399.2 μs</td>
+<td style="background-color: #FFF299"hasBackground>1,534,986.133 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,453,673.0 μs</td>
+<td style="background-color: #FFED99"hasBackground>1,644,704.967 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">LinkedList</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #EDFF99">84,287.589 μs</td>
-<td style="background-color: #A8FF99">99,761.672 μs</td>
-<td style="background-color: #B1FF99">94,579.08 μs</td>
-<td style="background-color: #B7FF99">104,472.178 μs</td>
-<td style="background-color: #B8FF99">94,499.33 μs</td>
-<td style="background-color: #B7FF99">103,702.533 μs</td>
-<td style="background-color: #A7FF99">105,297.4 μs</td>
-<td style="background-color: #A7FF99">93,205.919 μs</td>
-<td style="background-color: #A7FF99">104,024.1 μs</td>
-<td style="background-color: #A7FF99">94,607.424 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #EDFF99"hasBackground>84,287.589 μs</td>
+<td style="background-color: #A8FF99"hasBackground>99,761.672 μs</td>
+<td style="background-color: #B1FF99"hasBackground>94,579.08 μs</td>
+<td style="background-color: #B7FF99"hasBackground>104,472.178 μs</td>
+<td style="background-color: #B8FF99"hasBackground>94,499.33 μs</td>
+<td style="background-color: #B7FF99"hasBackground>103,702.533 μs</td>
+<td style="background-color: #A7FF99"hasBackground>105,297.4 μs</td>
+<td style="background-color: #A7FF99"hasBackground>93,205.919 μs</td>
+<td style="background-color: #A7FF99"hasBackground>104,024.1 μs</td>
+<td style="background-color: #A7FF99"hasBackground>94,607.424 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedSet</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #F1FF99">90,717.528 μs</td>
-<td style="background-color: #FFFD99">1,297,840.200 μs</td>
-<td style="background-color: #B5FF99">109,118.06 μs</td>
-<td style="background-color: #D2FF99">216,388.522 μs</td>
-<td style="background-color: #BEFF99">112,447.05 μs</td>
-<td style="background-color: #D2FF99">216,421.822 μs</td>
-<td style="background-color: #FFF299">1,508,580.2 μs</td>
-<td style="background-color: #FFF399">1,516,966.767 μs</td>
-<td style="background-color: #FFF999">1,414,749.6 μs</td>
-<td style="background-color: #FFEE99">1,622,614.400 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #F1FF99"hasBackground>90,717.528 μs</td>
+<td style="background-color: #FFFD99"hasBackground>1,297,840.200 μs</td>
+<td style="background-color: #B5FF99"hasBackground>109,118.06 μs</td>
+<td style="background-color: #D2FF99"hasBackground>216,388.522 μs</td>
+<td style="background-color: #BEFF99"hasBackground>112,447.05 μs</td>
+<td style="background-color: #D2FF99"hasBackground>216,421.822 μs</td>
+<td style="background-color: #FFF299"hasBackground>1,508,580.2 μs</td>
+<td style="background-color: #FFF399"hasBackground>1,516,966.767 μs</td>
+<td style="background-color: #FFF999"hasBackground>1,414,749.6 μs</td>
+<td style="background-color: #FFEE99"hasBackground>1,622,614.400 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenDictionary</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FAFF99">112,082.172 μs</td>
-<td style="background-color: #FFFE99">1,281,507.900 μs</td>
-<td style="background-color: #CCFF99">212,502.02 μs</td>
-<td style="background-color: #DBFF99">259,589.817 μs</td>
-<td style="background-color: #D0FF99">178,418.33 μs</td>
-<td style="background-color: #DCFF99">266,822.083 μs</td>
-<td style="background-color: #E0FF99">561,942.3 μs</td>
-<td style="background-color: #D4FF99">442,312.200 μs</td>
-<td style="background-color: #DAFF99">519,579.4 μs</td>
-<td style="background-color: #D7FF99">470,388.933 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FAFF99"hasBackground>112,082.172 μs</td>
+<td style="background-color: #FFFE99"hasBackground>1,281,507.900 μs</td>
+<td style="background-color: #CCFF99"hasBackground>212,502.02 μs</td>
+<td style="background-color: #DBFF99"hasBackground>259,589.817 μs</td>
+<td style="background-color: #D0FF99"hasBackground>178,418.33 μs</td>
+<td style="background-color: #DCFF99"hasBackground>266,822.083 μs</td>
+<td style="background-color: #E0FF99"hasBackground>561,942.3 μs</td>
+<td style="background-color: #D4FF99"hasBackground>442,312.200 μs</td>
+<td style="background-color: #DAFF99"hasBackground>519,579.4 μs</td>
+<td style="background-color: #D7FF99"hasBackground>470,388.933 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">FrozenSet</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FEFF99">129,252.750 μs</td>
-<td style="background-color: #FFFD99">1,302,989.867 μs</td>
-<td style="background-color: #CBFF99">206,294.76 μs</td>
-<td style="background-color: #E0FF99">288,380.600 μs</td>
-<td style="background-color: #CDFF99">163,747.90 μs</td>
-<td style="background-color: #E4FF99">313,587.333 μs</td>
-<td style="background-color: #E1FF99">566,892.6 μs</td>
-<td style="background-color: #D5FF99">450,568.600 μs</td>
-<td style="background-color: #D1FF99">435,732.6 μs</td>
-<td style="background-color: #D9FF99">496,427.167 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FEFF99"hasBackground>129,252.750 μs</td>
+<td style="background-color: #FFFD99"hasBackground>1,302,989.867 μs</td>
+<td style="background-color: #CBFF99"hasBackground>206,294.76 μs</td>
+<td style="background-color: #E0FF99"hasBackground>288,380.600 μs</td>
+<td style="background-color: #CDFF99"hasBackground>163,747.90 μs</td>
+<td style="background-color: #E4FF99"hasBackground>313,587.333 μs</td>
+<td style="background-color: #E1FF99"hasBackground>566,892.6 μs</td>
+<td style="background-color: #D5FF99"hasBackground>450,568.600 μs</td>
+<td style="background-color: #D1FF99"hasBackground>435,732.6 μs</td>
+<td style="background-color: #D9FF99"hasBackground>496,427.167 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableList (Sorted)</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFF399">176,902.744 μs</td>
-<td style="background-color: #FFF899">1,413,845.300 μs</td>
-<td style="background-color: #CDFF99">217,075.62 μs</td>
-<td style="background-color: #EDFF99">371,582.167 μs</td>
-<td style="background-color: #DAFF99">217,747.91 μs</td>
-<td style="background-color: #EFFF99">388,608.967 μs</td>
-<td style="background-color: #FFF499">1,470,650.3 μs</td>
-<td style="background-color: #FFF399">1,518,881.367 μs</td>
-<td style="background-color: #FFFB99">1,381,403.5 μs</td>
-<td style="background-color: #FFED99">1,643,588.667 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFF399"hasBackground>176,902.744 μs</td>
+<td style="background-color: #FFF899"hasBackground>1,413,845.300 μs</td>
+<td style="background-color: #CDFF99"hasBackground>217,075.62 μs</td>
+<td style="background-color: #EDFF99"hasBackground>371,582.167 μs</td>
+<td style="background-color: #DAFF99"hasBackground>217,747.91 μs</td>
+<td style="background-color: #EFFF99"hasBackground>388,608.967 μs</td>
+<td style="background-color: #FFF499"hasBackground>1,470,650.3 μs</td>
+<td style="background-color: #FFF399"hasBackground>1,518,881.367 μs</td>
+<td style="background-color: #FFFB99"hasBackground>1,381,403.5 μs</td>
+<td style="background-color: #FFED99"hasBackground>1,643,588.667 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">SortedDictionary</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFF199">180,298.967 μs</td>
-<td style="background-color: #FFF999">1,383,237.633 μs</td>
-<td style="background-color: #D7FF99">273,297.77 μs</td>
-<td style="background-color: #FDFF99">564,813.300 μs</td>
-<td style="background-color: #E3FF99">262,830.27 μs</td>
-<td style="background-color: #FCFF99">541,675.867 μs</td>
-<td style="background-color: #FFF399">1,487,667.4 μs</td>
-<td style="background-color: #FFF499">1,491,527.233 μs</td>
-<td style="background-color: #FFF799">1,476,652.0 μs</td>
-<td style="background-color: #FFF499">1,503,189.433 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFF199"hasBackground>180,298.967 μs</td>
+<td style="background-color: #FFF999"hasBackground>1,383,237.633 μs</td>
+<td style="background-color: #D7FF99"hasBackground>273,297.77 μs</td>
+<td style="background-color: #FDFF99"hasBackground>564,813.300 μs</td>
+<td style="background-color: #E3FF99"hasBackground>262,830.27 μs</td>
+<td style="background-color: #FCFF99"hasBackground>541,675.867 μs</td>
+<td style="background-color: #FFF399"hasBackground>1,487,667.4 μs</td>
+<td style="background-color: #FFF499"hasBackground>1,491,527.233 μs</td>
+<td style="background-color: #FFF799"hasBackground>1,476,652.0 μs</td>
+<td style="background-color: #FFF499"hasBackground>1,503,189.433 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableHashSet</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFCC99">251,731.117 μs</td>
-<td style="background-color: #FFFF99">1,201,671.967 μs</td>
-<td style="background-color: #FFB599">1,376,826.17 μs</td>
-<td style="background-color: #FFAB99">1,248,229.333 μs</td>
-<td style="background-color: #FFA999">1,068,130.90 μs</td>
-<td style="background-color: #FFB299">1,238,479.167 μs</td>
-<td style="background-color: #FFEC99">1,630,119.1 μs</td>
-<td style="background-color: #FFFC99">1,305,933.000 μs</td>
-<td style="background-color: #FFFF99">1,263,848.3 μs</td>
-<td style="background-color: #FFFC99">1,313,633.200 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFCC99"hasBackground>251,731.117 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,201,671.967 μs</td>
+<td style="background-color: #FFB599"hasBackground>1,376,826.17 μs</td>
+<td style="background-color: #FFAB99"hasBackground>1,248,229.333 μs</td>
+<td style="background-color: #FFA999"hasBackground>1,068,130.90 μs</td>
+<td style="background-color: #FFB299"hasBackground>1,238,479.167 μs</td>
+<td style="background-color: #FFEC99"hasBackground>1,630,119.1 μs</td>
+<td style="background-color: #FFFC99"hasBackground>1,305,933.000 μs</td>
+<td style="background-color: #FFFF99"hasBackground>1,263,848.3 μs</td>
+<td style="background-color: #FFFC99"hasBackground>1,313,633.200 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableDictionary</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FFB299">279,102.817 μs</td>
-<td style="background-color: #FFFD99">1,283,939.367 μs</td>
-<td style="background-color: #FF9999">1,428,985.53 μs</td>
-<td style="background-color: #FF9999">1,267,845.800 μs</td>
-<td style="background-color: #FF9999">1,081,328.97 μs</td>
-<td style="background-color: #FF9999">1,276,222.100 μs</td>
-<td style="background-color: #FFE799">1,732,876.9 μs</td>
-<td style="background-color: #FFFC99">1,315,924.700 μs</td>
-<td style="background-color: #FFFB99">1,360,223.1 μs</td>
-<td style="background-color: #FFFC99">1,316,530.100 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FFB299"hasBackground>279,102.817 μs</td>
+<td style="background-color: #FFFD99"hasBackground>1,283,939.367 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,428,985.53 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,267,845.800 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,081,328.97 μs</td>
+<td style="background-color: #FF9999"hasBackground>1,276,222.100 μs</td>
+<td style="background-color: #FFE799"hasBackground>1,732,876.9 μs</td>
+<td style="background-color: #FFFC99"hasBackground>1,315,924.700 μs</td>
+<td style="background-color: #FFFB99"hasBackground>1,360,223.1 μs</td>
+<td style="background-color: #FFFC99"hasBackground>1,316,530.100 μs</td>
 </tr>
 <tr>
 <td style="text-align: left">ImmutableSortedDictionary</td>
-<td style="background-color: #CCFFFF">1000000</td>
-<td style="text-align: left;background-color: #CCFFFF">True</td>
-<td style="background-color: #FF9999">288,083.850 μs</td>
-<td style="background-color: #FF9999">2,494,466.167 μs</td>
-<td style="background-color: #F1FF99">455,724.87 μs</td>
-<td style="background-color: #FFFE99">649,206.133 μs</td>
-<td style="background-color: #FDFF99">465,749.07 μs</td>
-<td style="background-color: #FFFE99">652,564.900 μs</td>
-<td style="background-color: #FF9999">2,430,546.8 μs</td>
-<td style="background-color: #FF9999">2,466,352.000 μs</td>
-<td style="background-color: #FF9999">2,537,376.7 μs</td>
-<td style="background-color: #FF9999">2,486,785.633 μs</td>
+<td style="background-color: #CCFFFF"hasBackground>1000000</td>
+<td style="text-align: left; background-color: #CCFFFF"hasBackground>True</td>
+<td style="background-color: #FF9999"hasBackground>288,083.850 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,494,466.167 μs</td>
+<td style="background-color: #F1FF99"hasBackground>455,724.87 μs</td>
+<td style="background-color: #FFFE99"hasBackground>649,206.133 μs</td>
+<td style="background-color: #FDFF99"hasBackground>465,749.07 μs</td>
+<td style="background-color: #FFFE99"hasBackground>652,564.900 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,430,546.8 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,466,352.000 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,537,376.7 μs</td>
+<td style="background-color: #FF9999"hasBackground>2,486,785.633 μs</td>
 </tr>
 </tbody>
 </table>
-<div class="powered-by">Powered by <a href="https://github.com/mjebrahimi/BenchmarkDotNetVisualizer">https://github.com/mjebrahimi/BenchmarkDotNetVisualizer</a></div>
+<div class="created-by">Created by <a href="https://github.com/mjebrahimi/BenchmarkDotNetVisualizer"><strong>BenchmarkDotNetVisualizer</strong></a></div>
+</body>
+<script>
+  const storageKey = "theme-preference";
+  const getColorPreference = () => {
+    if (localStorage.getItem(storageKey))
+      return localStorage.getItem(storageKey);
+    else
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  };
+  const theme = { value: getColorPreference() };
+  const applyPreference = () => {
+    document.firstElementChild.setAttribute("data-theme", theme.value);
+    document.querySelector("#theme-toggle")?.setAttribute("aria-label", theme.value);
+  };
+  const setPreference = () => {
+    localStorage.setItem(storageKey, theme.value);
+    applyPreference();
+  };
+  const onClick = () => {
+    theme.value = theme.value === "light" ? "dark" : "light";
+    setPreference();
+  };
+  if (localStorage.getItem(storageKey) == null) {
+    //set default theme if no preference is set
+    theme.value = "light";
+    setPreference();
+  }
+  applyPreference();
+  window.onload = () => {
+    applyPreference();
+    document.querySelector("#theme-toggle").addEventListener("click", onClick);
+  };
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", ({ matches: isDark }) => {
+      theme.value = isDark ? "dark" : "light";
+      setPreference();
+    });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/colreorder/1.5.4/js/dataTables.colReorder.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
-</body>
 <script>
-    $(document).ready( function () {
-        DataTable.ext.type.order['custom-orderer-pre'] = function (d) {
-            d = d.replace(/(<([^>]+)>)/gi, ""); //remove html tags
-            if (!d.match(/^\d/)) //if not started with number
-                return d;
-            var regex = /[\d,]+(?:\.\d+)?/;
-            var number = d.match(regex)[0].replace(/,/g, ""); //extract number
-            return parseFloat(number); //Number
-        };
-        $('table').DataTable({
-            info: false,
-            paging: false,
-            colReorder: true,
-            order: [], //remove default order
-            columnDefs: [
-                {
-                    type: 'custom-orderer',
-                    targets: '_all'
-                }
-            ],
-            dom: 'Bfrtip',
-            buttons: ['colvis']
-        });
+  $(document).ready(function () {
+    DataTable.ext.type.order["custom-orderer-pre"] = function (d) {
+      d = d.replace(/(<([^>]+)>)/gi, ""); //remove html tags
+      if (!d.match(/^\d/))
+        //if not started with number
+        return d;
+      var regex = /[\d,]+(?:\.\d+)?/;
+      var number = d.match(regex)[0].replace(/,/g, ""); //extract number
+      return parseFloat(number); //Number
+    };
+    $("table").DataTable({
+      info: false,
+      paging: false,
+      colReorder: true,
+      order: [], //remove default order
+      columnDefs: [
+        {
+          type: "custom-orderer",
+          targets: "_all",
+        },
+      ],
+      dom: "Bfrtip",
+      buttons: ["colvis"],
     });
+  });
 </script>
 </html>
