@@ -26,15 +26,15 @@ If you find this repository useful and like it, why not give it a star? if not, 
 
 ### Benchmark of Collection Searching (Contains method) in terms of Execution Time (Mean)
 
-- Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Mean.html)
-- Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Mean.png)
+- **Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Mean.html)**
+- **Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Mean.png)**
 
 ![Benchmark-SearchContains-Mean-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Mean-Preview.png)
 
 ### Benchmark of Collection Searching (Contains method) in terms of Allocation Size
 
-- Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Allocated.html)
-- Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Allocated.png)
+- **Visit [HTML Page](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Allocated.html)**
+- **Visit [Full Image](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Allocated.png)**
 
 ![Benchmark-SearchContains-Allocated-Preview](https://mjebrahimi.github.io/DotNet-Collections-Benchmark/Benchmark-SearchContains-Allocated-Preview.png)
 
